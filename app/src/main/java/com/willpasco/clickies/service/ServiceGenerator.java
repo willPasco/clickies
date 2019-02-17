@@ -11,7 +11,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    public static final String BASE_URL = "https://community-neutrino-currency-conversion.p.mashape.com/";
+    public static final String BASE_URL = "https://api.themoviedb.org/";
+    public static final String API_KEY = "";
 
     public static <S> S createService(Class<S> serviceClass) {
 
