@@ -9,6 +9,7 @@ import com.willpasco.clickies.service.ServiceGenerator;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -19,16 +20,17 @@ import static com.willpasco.clickies.service.ServiceGenerator.API_KEY;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";
+    private MovieRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        MovieRecyclerAdapter adapter = new MovieRecyclerAdapter();
+        adapter = new MovieRecyclerAdapter();
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(HomeActivity.this, RecyclerView.VERTICAL, false);
+        GridLayoutManager layoutManager = new GridLayoutManager(HomeActivity.this, 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -46,7 +48,10 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<MovieJsonResponse> call, @NonNull Response<MovieJsonResponse> response) {
                 if (response.isSuccessful()) {
-                    Log.i(TAG, response.body() + "");
+                    if(response.body() != null){
+                        adapter.addAll(response.body().getResults());
+                    }
+                    Log.i(TAG, response.body().getResults() + "");
                 }
             }
 
