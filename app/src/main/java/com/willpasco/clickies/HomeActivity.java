@@ -10,7 +10,6 @@ import com.willpasco.clickies.service.ServiceGenerator;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,7 +47,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<MovieJsonResponse> call, @NonNull Response<MovieJsonResponse> response) {
                 if (response.isSuccessful()) {
-                    if(response.body() != null){
+                    if (response.body() != null) {
                         adapter.addAll(response.body().getResults());
                     }
                     Log.i(TAG, response.body().getResults() + "");

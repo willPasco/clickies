@@ -1,5 +1,6 @@
 package com.willpasco.clickies;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,10 +52,16 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
             this.moviePoster = itemView.findViewById(R.id.image_view_movie_poster);
         }
 
-        void onBind(Movie model) {
-
+        void onBind(final Movie model) {
             ImageLoader.loadImage(BASE_IMAGE_PATH + model.getPosterPath(), moviePoster);
-
+            moviePoster.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(moviePoster.getContext(), MovieDetailsActivity.class);
+                    intent.putExtra("movie", model);
+                    moviePoster.getContext().startActivity(intent);
+                }
+            });
         }
 
     }

@@ -17,5 +17,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
+        Intent intent = getIntent();
+        Movie model = intent.getParcelableExtra("movie");
+
+        Log.i(TAG,model.toString());
     }
 }
