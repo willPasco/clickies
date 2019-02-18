@@ -1,9 +1,12 @@
 package com.willpasco.clickies.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Movie {
+public class Movie implements Parcelable {
 
     @SerializedName("vote_count")
     @Expose
@@ -44,6 +47,33 @@ public class Movie {
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
+
+
+    private Movie(Parcel parcel){
+        this.voteCount = parcel.readInt();
+        this.id = parcel.readInt();
+        this.voteAverage = parcel.readDouble();
+        this.title = parcel.readString();
+        this.popularity = parcel.readDouble();
+        this.posterPath = parcel.readString();
+        this.originalLanguage = parcel.readString();
+        this.originalTitle = parcel.readString();
+        this.backdropPath = parcel.readString();
+        this.overview = parcel.readString();
+        this.releaseDate = parcel.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     public Integer getVoteCount()
     {
@@ -175,4 +205,42 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeInt(voteCount);
+        parcel.writeInt(id);
+        parcel.writeDouble(voteAverage);
+        parcel.writeString(title);
+        parcel.writeDouble(popularity);
+        parcel.writeString(posterPath);
+        parcel.writeString(originalLanguage);
+        parcel.writeString(originalTitle);
+        parcel.writeString(backdropPath);
+        parcel.writeString(overview);
+        parcel.writeString(releaseDate);
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "voteCount=" + voteCount +
+                ", id=" + id +
+                ", video=" + video +
+                ", voteAverage=" + voteAverage +
+                ", title='" + title + '\'' +
+                ", popularity=" + popularity +
+                ", posterPath='" + posterPath + '\'' +
+                ", originalLanguage='" + originalLanguage + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
+                ", backdropPath='" + backdropPath + '\'' +
+                ", adult=" + adult +
+                ", overview='" + overview + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                '}';
+    }
 }
