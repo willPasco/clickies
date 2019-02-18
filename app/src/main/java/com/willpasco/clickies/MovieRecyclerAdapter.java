@@ -5,8 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.willpasco.clickies.model.Movie;
+import com.willpasco.clickies.util.ImageLoader;
 
 import java.util.List;
 
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdapter.MovieViewHolder> {
 
+    public static final String BASE_IMAGE_PATH = "http://image.tmdb.org/t/p/w185/";
     private List<Movie> movieList;
 
     @NonNull
@@ -52,10 +53,8 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
         void onBind(Movie model) {
 
-            Glide.with(moviePoster.getContext())
-                    .load("http://image.tmdb.org/t/p/w185/"+model.getPosterPath())
-                    .fitCenter()
-                    .into(moviePoster);
+            ImageLoader.loadImage(BASE_IMAGE_PATH + model.getPosterPath(), moviePoster);
+
         }
 
     }
