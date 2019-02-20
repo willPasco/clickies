@@ -2,7 +2,10 @@ package com.willpasco.clickies;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.nightonke.jellytogglebutton.JellyToggleButton;
+import com.nightonke.jellytogglebutton.State;
 import com.willpasco.clickies.model.MovieJsonResponse;
 import com.willpasco.clickies.service.RetrofitService;
 import com.willpasco.clickies.service.ServiceGenerator;
@@ -27,6 +30,19 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         adapter = new MovieRecyclerAdapter();
+
+        JellyToggleButton jellyToggleButton = findViewById(R.id.jellyToggleButton);
+
+        jellyToggleButton.setOnStateChangeListener(new JellyToggleButton.OnStateChangeListener() {
+            @Override
+            public void onStateChange(float process, State state, JellyToggleButton jtb) {
+                if(state == State.LEFT){
+                    retrofitConverter("popular");
+                }else if(state == State.RIGHT){
+                    retrofitConverter("top_rated");
+                }
+            }
+        });
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(HomeActivity.this, 2);
