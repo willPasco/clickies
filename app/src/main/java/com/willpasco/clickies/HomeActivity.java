@@ -96,7 +96,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<MovieJsonResponse> call, @NonNull Response<MovieJsonResponse> response) {
                 if (response.isSuccessful()) {
-                    if (response.body() == null) {
+                    if (response.body() != null) {
                         recyclerView.scrollToPosition(0);
                         adapter.addAll(response.body().getResults());
                         showContentState();
