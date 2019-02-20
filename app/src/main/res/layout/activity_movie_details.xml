@@ -29,7 +29,8 @@
             android:layout_marginTop="@dimen/space_default"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             tools:scaleType="centerCrop"
-            tools:src="@mipmap/ic_launcher" />
+            tools:src="@mipmap/ic_launcher"
+            android:contentDescription="@string/movie_poster_content_description" />
 
         <TextView
             android:id="@+id/text_view_movie_title"

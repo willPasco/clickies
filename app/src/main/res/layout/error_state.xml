@@ -12,7 +12,7 @@
     android:layout_height="wrap_content" />
 
     <TextView
-        android:text="Tivemos algum problema para acessar o conteúdo!"
+        android:text="@string/error_state_description"
         android:layout_width="wrap_content"
         style="@style/TextTitle"
         android:layout_height="wrap_content" />
@@ -24,6 +24,6 @@
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
         android:padding="16dp"
-        android:text="Tentar novamente"/>
+        android:text="@string/button_retry"/>
 
 </LinearLayout>

@@ -7,8 +7,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-import static com.willpasco.clickies.service.ServiceGenerator.API_KEY;
-
 public interface RetrofitService {
 
 

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Clickies</string>
+    <string name="movie_poster_content_description">Movie Poster</string>
+    <string name="error_state_description">Tivemos algum problema para acessar o conteúdo!</string>
+    <string name="button_retry">Tentar novamente</string>
+    <string name="toolbar_details_title">Detalhes do filme</string>
 </resources>

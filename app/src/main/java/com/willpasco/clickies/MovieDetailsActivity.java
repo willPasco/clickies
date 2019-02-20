@@ -17,7 +17,6 @@ import static com.willpasco.clickies.MovieRecyclerAdapter.BASE_IMAGE_PATH;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-    private static final String TAG = "MovieDetailsActivity";
     public static final String MOVIE_EXTRA_KEY = "movie";
     private TextView movieTitle;
     private TextView movieSynopsis;
@@ -32,7 +31,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         onBindView();
 
-        toolbar.setTitle("Detalhes do filme");
+        toolbar.setTitle(getString(R.string.toolbar_details_title));
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         setSupportActionBar(toolbar);
 

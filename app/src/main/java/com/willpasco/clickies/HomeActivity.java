@@ -1,7 +1,6 @@
 package com.willpasco.clickies;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -25,7 +24,6 @@ import static com.willpasco.clickies.service.ServiceGenerator.API_KEY;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private static final String TAG = "HomeActivity";
     private static final String POPULAR_SEARCH_TYPE = "popular";
     private static final String TOP_RATED_SEARCH_TYPE = "top_rated";
 
@@ -88,7 +86,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    public void retrofitConverter(String order) {
+    private void retrofitConverter(String order) {
 
         RetrofitService service = ServiceGenerator.createService(RetrofitService.class);
 
@@ -102,10 +100,10 @@ public class HomeActivity extends AppCompatActivity {
                         recyclerView.scrollToPosition(0);
                         adapter.addAll(response.body().getResults());
                         showContentState();
-                    }else{
+                    } else {
                         showErrorState();
                     }
-                }else{
+                } else {
                     showErrorState();
                 }
             }
@@ -131,7 +129,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    public void showLoadingState() {
+    private void showLoadingState() {
         recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         errorState.setVisibility(View.GONE);
