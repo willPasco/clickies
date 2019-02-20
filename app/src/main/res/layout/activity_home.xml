@@ -11,7 +11,8 @@
         android:id="@+id/progress_bar"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:visibility="gone"/>
 
     <include
         android:id="@+id/include_error_state"
@@ -26,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.appbar.AppBarLayout
@@ -46,7 +48,7 @@
                     android:id="@+id/text_view_toolbar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textColor="@android:color/white"
                     android:layout_margin="16dp"
                     android:text="@string/app_name"/>
@@ -59,20 +61,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_margin="16dp"
-                    app:jtbLeftBackgroundColor="@color/colorPrimaryDark"
-                    app:jtbRightBackgroundColor="@color/colorPrimaryDark"
-                    app:jtbLeftTextColor="@color/colorPrimary"
-                    app:jtbRightTextColor="@color/colorPrimary"
-                    app:jtbJelly="active_stiff_fatty"
-                    app:jtbLeftText="Popular"
-                    app:jtbLeftTextSize="12sp"
-                    app:jtbRightText="Top"
-                    app:jtbRightTextSize="12sp"
-                    app:jtbTextMarginBottom="2dp"
-                    app:jtbTextMarginCenter="4dp"
-                    app:jtbTextMarginLeft="2dp"
-                    app:jtbTextMarginRight="2dp"
-                    app:jtbTextMarginTop="2dp" />
+                    style="@style/ToggleHome"/>
             </RelativeLayout>
 
 

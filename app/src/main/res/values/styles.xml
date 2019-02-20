@@ -8,4 +8,26 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ToggleHome">
+        <item name="jtbLeftBackgroundColor">@color/colorPrimaryDark</item>
+        <item name="jtbRightBackgroundColor">@color/colorPrimaryDark</item>
+        <item name="jtbLeftTextColor">@color/colorPrimaryDark</item>
+        <item name="jtbRightTextColor">@color/colorPrimaryDark</item>
+        <item name="jtbJelly">active_stiff_fatty</item>
+        <item name="jtbLeftText">Popular</item>
+        <item name="jtbLeftTextSize">12sp</item>
+        <item name="jtbRightText">Top</item>
+        <item name="jtbRightTextSize">12sp</item>
+        <item name="jtbTextMarginBottom">2dp</item>
+        <item name="jtbTextMarginCenter">2dp</item>
+        <item name="jtbTextMarginRight">2dp</item>
+        <item name="jtbTextMarginTop">2dp</item>
+    </style>
+
+    <style name="TextTitleBold">
+        <item name="android:alpha">0.7</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>
