@@ -7,10 +7,25 @@
     android:background="@drawable/home_gradient_background"
     tools:context=".HomeActivity">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <include
+        android:id="@+id/include_error_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/error_state"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.appbar.AppBarLayout
