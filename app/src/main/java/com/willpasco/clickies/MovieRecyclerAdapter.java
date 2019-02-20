@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.util.ImageLoader;
@@ -46,14 +47,17 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
     class MovieViewHolder extends RecyclerView.ViewHolder {
         private ImageView moviePoster;
+        private TextView movieTitle;
 
         MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             this.moviePoster = itemView.findViewById(R.id.image_view_movie_poster);
+            this.movieTitle = itemView.findViewById(R.id.text_view_movie_title);
         }
 
         void onBind(final Movie model) {
             ImageLoader.loadImage(BASE_IMAGE_PATH + model.getPosterPath(), moviePoster);
+            movieTitle.setText(model.getTitle());
             moviePoster.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
