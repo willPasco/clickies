@@ -1,11 +1,49 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="ToggleHome">
+        <item name="jtbLeftBackgroundColor">@color/colorPrimaryDark</item>
+        <item name="jtbRightBackgroundColor">@color/colorPrimaryDark</item>
+        <item name="jtbLeftTextColor">@color/colorPrimaryDark</item>
+        <item name="jtbRightTextColor">@color/colorPrimaryDark</item>
+        <item name="jtbJelly">active_stiff_fatty</item>
+        <item name="jtbLeftText">Popular</item>
+        <item name="jtbLeftTextSize">12sp</item>
+        <item name="jtbRightText">Top</item>
+        <item name="jtbRightTextSize">12sp</item>
+        <item name="jtbTextMarginBottom">2dp</item>
+        <item name="jtbTextMarginCenter">2dp</item>
+        <item name="jtbTextMarginRight">2dp</item>
+        <item name="jtbTextMarginTop">2dp</item>
+    </style>
+
+    <style name="TextTitle">
+        <item name="android:alpha">0.7</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextTitle.Large" parent="TextTitle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:alpha">1</item>
+    </style>
+
+    <style name="TextDescription">
+        <item name="android:alpha">0.7</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextDescription.Small" parent="TextDescription">
+        <item name="android:textSize">14sp</item>
+    </style>
+
 
 </resources>
