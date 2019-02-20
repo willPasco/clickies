@@ -41,18 +41,27 @@ public class MovieDetailsActivity extends AppCompatActivity {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
             supportActionBar.setDisplayShowHomeEnabled(true);
         }
-        if(toolbar.getNavigationIcon()!= null){
+        if (toolbar.getNavigationIcon() != null) {
             toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC_ATOP);
         }
 
         Intent intent = getIntent();
-        if(intent.hasExtra(MOVIE_EXTRA_KEY)){
+        if (intent.hasExtra(MOVIE_EXTRA_KEY)) {
             Movie model = intent.getParcelableExtra(MOVIE_EXTRA_KEY);
             movieTitle.setText(model.getTitle());
             movieSynopsis.setText(model.getOverview());
-            ImageLoader.loadImageCenterInside(BASE_IMAGE_PATH+model.getPosterPath(), movieImagePoster);
-            movieDate.setText(model.getReleaseDate());
+            ImageLoader.loadImageCenterInside(BASE_IMAGE_PATH + model.getPosterPath(), movieImagePoster);
+            movieDate.setText(formatDate(model.getReleaseDate()));
         }
+
+    }
+
+    private String formatDate(String date) {
+        String[] strings = date.split("-");
+        String day = strings[2];
+        String month = strings[1];
+        String year = strings[0];
+        return day + "/" + month + "/" + year;
 
     }
 

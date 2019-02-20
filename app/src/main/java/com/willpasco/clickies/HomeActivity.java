@@ -49,13 +49,15 @@ public class HomeActivity extends AppCompatActivity {
         jellyToggleButton.setOnStateChangeListener(new JellyToggleButton.OnStateChangeListener() {
             @Override
             public void onStateChange(float process, State state, JellyToggleButton jtb) {
-                showLoadingState();
                 if (state == State.LEFT) {
+                    showLoadingState();
                     searchType = POPULAR_SEARCH_TYPE;
+                    retrofitConverter(searchType);
                 } else if (state == State.RIGHT) {
+                    showLoadingState();
                     searchType = TOP_RATED_SEARCH_TYPE;
+                    retrofitConverter(searchType);
                 }
-                retrofitConverter(searchType);
             }
         });
 
@@ -100,10 +102,12 @@ public class HomeActivity extends AppCompatActivity {
                         recyclerView.scrollToPosition(0);
                         adapter.addAll(response.body().getResults());
                         showContentState();
+                    }else{
+                        showErrorState();
                     }
+                }else{
                     showErrorState();
                 }
-                showErrorState();
             }
 
             @Override
