@@ -3,4 +3,6 @@
     <color name="colorPrimary">#4a148c</color>
     <color name="colorPrimaryDark">#270A4A</color>
     <color name="colorAccent">#0d47a1</color>
+    <color name="vote_arc_color">#5CFFFFFF</color>
+    <color name="vote_progress_color">#51B1FF</color>
 </resources>

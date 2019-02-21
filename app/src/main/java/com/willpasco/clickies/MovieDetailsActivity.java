@@ -12,6 +12,7 @@ import com.willpasco.clickies.util.ImageLoader;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import rjsv.circularview.CircleView;
 
 import static com.willpasco.clickies.MovieRecyclerAdapter.BASE_IMAGE_PATH;
 
@@ -23,6 +24,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private ImageView movieImagePoster;
     private TextView movieDate;
     private Toolbar toolbar;
+    private CircleView voteRated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             movieSynopsis.setText(model.getOverview());
             ImageLoader.loadImageCenterInside(BASE_IMAGE_PATH + model.getPosterPath(), movieImagePoster);
             movieDate.setText(formatDate(model.getReleaseDate()));
+            voteRated.setProgressValue(model.getVoteAverage());
         }
 
     }
@@ -76,5 +79,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieImagePoster = findViewById(R.id.image_view_movie_poster);
         movieDate = findViewById(R.id.text_view_movie_date);
         toolbar = findViewById(R.id.toolbar);
+        voteRated = findViewById(R.id.circle_view_vote_rated);
     }
 }
