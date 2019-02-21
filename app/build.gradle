@@ -11,6 +11,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+
+        buildTypes.each {
+            //TODO Put your api key here.
+            it.buildConfigField 'String', 'API_KEY', '""'
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
