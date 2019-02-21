@@ -39,6 +39,8 @@ dependencies {
     //Jelly Toggle
     implementation 'com.nightonke:jellytogglebutton:1.0.2'
 
+    //Circular View
+    implementation 'com.github.rjsvieira:circularView:1.3.0'
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 
