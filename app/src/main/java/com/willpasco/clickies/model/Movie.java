@@ -10,7 +10,7 @@ public class Movie implements Parcelable {
 
     @SerializedName("vote_average")
     @Expose
-    private final Double voteAverage;
+    private final float voteAverage;
     @SerializedName("title")
     @Expose
     private final String title;
@@ -26,7 +26,7 @@ public class Movie implements Parcelable {
 
 
     private Movie(Parcel parcel){
-        this.voteAverage = parcel.readDouble();
+        this.voteAverage = parcel.readFloat();
         this.title = parcel.readString();
         this.posterPath = parcel.readString();
         this.overview = parcel.readString();
@@ -45,6 +45,9 @@ public class Movie implements Parcelable {
         }
     };
 
+    public float getVoteAverage() {
+        return voteAverage;
+    }
 
     public String getTitle()
     {
@@ -77,7 +80,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeDouble(voteAverage);
+        parcel.writeFloat(voteAverage);
         parcel.writeString(title);
         parcel.writeString(posterPath);
         parcel.writeString(overview);
