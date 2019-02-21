@@ -22,6 +22,14 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
+    <include
+        android:id="@+id/include_no_network_state"
+        layout="@layout/no_network_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

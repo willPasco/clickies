@@ -6,25 +6,25 @@
     android:orientation="vertical">
 
 
-<androidx.appcompat.widget.AppCompatImageView
-    android:src="@drawable/ic_not_interested"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:src="@drawable/ic_signal_wifi_off"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <TextView
-        android:text="@string/error_state_description"
+        android:text="@string/no_network"
         android:layout_width="wrap_content"
         style="@style/TextTitle"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/button_retry"
+        android:id="@+id/button_config"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
         android:layout_marginTop="@dimen/space_medium"
         android:padding="16dp"
-        android:text="@string/button_retry"/>
+        android:text="@string/button_config_access"/>
 
 </LinearLayout>
