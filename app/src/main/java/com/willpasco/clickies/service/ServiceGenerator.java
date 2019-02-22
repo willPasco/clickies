@@ -1,6 +1,7 @@
 package com.willpasco.clickies.service;
 
 import com.google.gson.Gson;
+import com.willpasco.clickies.BuildConfig;
 
 import java.util.concurrent.TimeUnit;
 
@@ -12,8 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceGenerator {
 
     private static final String BASE_URL = "https://api.themoviedb.org/";
-    //TODO Put your api key here.
-    public static final String API_KEY = "";
+    public static final String API_KEY = BuildConfig.API_KEY;
 
     public static <S> S createService(Class<S> serviceClass) {
 

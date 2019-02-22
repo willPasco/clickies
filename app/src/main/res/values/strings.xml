@@ -4,4 +4,7 @@
     <string name="error_state_description">Tivemos algum problema para acessar o conteúdo!</string>
     <string name="button_retry">Tentar novamente</string>
     <string name="toolbar_details_title">Detalhes do filme</string>
+    <string name="no_network">Não foi possível conectar a internet, verifique sua conexão.</string>
+    <string name="button_config_access">Abrir configurações</string>
+    <string name="toast_no_internet_connection">Ainda sem internet, por favor verifique a sua conexão.</string>
 </resources>
