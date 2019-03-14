@@ -71,12 +71,15 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        MutableLiveData<List<Movie>> movieList = movieViewModel.getListMovieLiveData(searchType);
-        movieList.observe(this, new Observer<List<Movie>>() {
+        MutableLiveData<List<Movie>> listMovieMutableLiveData = movieViewModel.getListMovieLiveData(searchType);
+        listMovieMutableLiveData.observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(List<Movie> movies) {
                 showContentState();
                 adapter.addAll(movies);
+                if(adapter.getItemCount() <= 0){
+                    showErrorState();
+                }
             }
         });
 

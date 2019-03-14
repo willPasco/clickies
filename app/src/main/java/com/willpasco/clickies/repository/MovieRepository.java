@@ -3,6 +3,7 @@ package com.willpasco.clickies.repository;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import com.willpasco.clickies.HomeActivity;
 import com.willpasco.clickies.dao.ClickiesRoomDatabase;
 import com.willpasco.clickies.dao.MovieDao;
 import com.willpasco.clickies.model.Movie;
@@ -18,7 +19,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.willpasco.clickies.HomeActivity.*;
 import static com.willpasco.clickies.service.ServiceGenerator.API_KEY;
 
 public class MovieRepository {
@@ -70,12 +70,12 @@ public class MovieRepository {
         }
 
         @Override
-        protected List<Movie> doInBackground(String... orders) {
-            String order = orders[0];
+        protected List<Movie> doInBackground(String... params) {
+            String order = params[0];
             switch (order) {
-                case POPULAR_SEARCH_TYPE:
+                case HomeActivity.POPULAR_SEARCH_TYPE:
                     return asyncTaskDao.getMoviesByPopular();
-                case TOP_RATED_SEARCH_TYPE:
+                case HomeActivity.TOP_RATED_SEARCH_TYPE:
                     return asyncTaskDao.getMoviesByVote();
                 default:
                     return asyncTaskDao.getMoviesByPopular();
