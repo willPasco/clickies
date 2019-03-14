@@ -3,6 +3,7 @@ package com.willpasco.clickies.viewmodel;
 import android.app.Application;
 
 import com.willpasco.clickies.model.Movie;
+import com.willpasco.clickies.model.Review;
 import com.willpasco.clickies.model.Trailer;
 import com.willpasco.clickies.repository.MovieRepository;
 import com.willpasco.clickies.service.DataWrapper;
@@ -19,12 +20,14 @@ public class MovieViewModel extends AndroidViewModel {
     private MovieRepository repository;
     private MutableLiveData<DataWrapper<List<Movie>>> listMovieMutableLiveData;
     private MutableLiveData<DataWrapper<List<Trailer>>> listTrailerMutableLiveData;
+    private MutableLiveData<DataWrapper<List<Review>>> listReviewMutableLiveData;
 
     public MovieViewModel(@NonNull Application application) {
         super(application);
         repository = new MovieRepository(application);
         listMovieMutableLiveData = new MutableLiveData<>();
         listTrailerMutableLiveData = new MutableLiveData<>();
+        listReviewMutableLiveData = new MutableLiveData<>();
     }
 
     public MutableLiveData<DataWrapper<List<Movie>>> getListMovieLiveData() {
@@ -57,5 +60,13 @@ public class MovieViewModel extends AndroidViewModel {
 
     public void loadTrailers(int id) {
         repository.loadTrailer(listTrailerMutableLiveData, id);
+    }
+
+    public MutableLiveData<DataWrapper<List<Review>>> getListReviewMutableLiveData() {
+        return listReviewMutableLiveData;
+    }
+
+    public void loadReviews(int id) {
+        repository.loadReviews(listReviewMutableLiveData, id);
     }
 }
