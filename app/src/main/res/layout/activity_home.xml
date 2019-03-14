@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/home_gradient_background"
@@ -15,9 +16,9 @@
         tools:visibility="gone" />
 
     <include
-        android:id="@+id/include_error_state"
-        layout="@layout/error_state"
-        android:layout_width="wrap_content"
+        android:id="@+id/include_no_content_state"
+        layout="@layout/no_content_state"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone" />
@@ -25,20 +26,27 @@
     <include
         android:id="@+id/include_no_network_state"
         layout="@layout/no_network_state"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_marginTop="@dimen/space_default"
-        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:ignore="RtlSymmetry"
-        tools:visibility="visible"/>
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:ignore="RtlSymmetry"
+            tools:visibility="visible" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
