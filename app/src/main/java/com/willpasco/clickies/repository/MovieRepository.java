@@ -13,27 +13,34 @@ import com.willpasco.clickies.service.ServiceGenerator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.willpasco.clickies.HomeActivity.*;
 import static com.willpasco.clickies.service.ServiceGenerator.API_KEY;
 
 public class MovieRepository {
     private MovieDao dao;
-    private LiveData<List<Movie>> listMovieLiveData;
+    private static MutableLiveData<List<Movie>> listMovieMutableLiveData;
 
     public MovieRepository(Application application) {
         ClickiesRoomDatabase db = ClickiesRoomDatabase.getDatabase(application);
         this.dao = db.movieDao();
-        listMovieLiveData = dao.getAllMovies();
+        listMovieMutableLiveData = new MutableLiveData<>();
     }
 
-    public LiveData<List<Movie>> getListMovieLiveData() {
+    public MutableLiveData<List<Movie>> getListMovieLiveData(String order) {
+        refreshData(order);
+        new QueryAsyncTask(dao).execute(order);
+        return listMovieMutableLiveData;
+    }
+
+    private void refreshData(String order) {
         RetrofitService service = ServiceGenerator.createService(RetrofitService.class);
 
-        Call<MovieJsonResponse> call = service.getMovies("popular", API_KEY);
+        Call<MovieJsonResponse> call = service.getMovies(order, API_KEY);
 
         call.enqueue(new Callback<MovieJsonResponse>() {
             @Override
@@ -52,14 +59,40 @@ public class MovieRepository {
             public void onFailure(@NonNull Call<MovieJsonResponse> call, @NonNull Throwable t) {
             }
         });
-        return listMovieLiveData;
+    }
+
+    private static class QueryAsyncTask extends AsyncTask<String, Void, List<Movie>> {
+
+        private MovieDao asyncTaskDao;
+
+        private QueryAsyncTask(MovieDao asyncTaskDao) {
+            this.asyncTaskDao = asyncTaskDao;
+        }
+
+        @Override
+        protected List<Movie> doInBackground(String... orders) {
+            String order = orders[0];
+            switch (order) {
+                case POPULAR_SEARCH_TYPE:
+                    return asyncTaskDao.getMoviesByPopular();
+                case TOP_RATED_SEARCH_TYPE:
+                    return asyncTaskDao.getMoviesByVote();
+                default:
+                    return asyncTaskDao.getMoviesByPopular();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<Movie> movies) {
+            listMovieMutableLiveData.setValue(movies);
+        }
     }
 
     private static class InsertAsyncTask extends AsyncTask<Movie, Void, Void> {
 
         private MovieDao asyncTaskDao;
 
-        public InsertAsyncTask(MovieDao asyncTaskDao) {
+        private InsertAsyncTask(MovieDao asyncTaskDao) {
             this.asyncTaskDao = asyncTaskDao;
         }
 

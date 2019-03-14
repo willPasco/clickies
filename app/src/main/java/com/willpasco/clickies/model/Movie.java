@@ -38,14 +38,19 @@ public class Movie implements Parcelable {
     @Expose
     @ColumnInfo(name = "release_date")
     private final String releaseDate;
+    @SerializedName("popularity")
+    @Expose
+    @ColumnInfo(name = "popularity")
+    private final float popularity;
 
-    public Movie(int id, float voteAverage, String title, String posterPath, String overview, String releaseDate) {
+    public Movie(int id, float voteAverage, String title, String posterPath, String overview, String releaseDate, float popularity) {
         this.id = id;
         this.voteAverage = voteAverage;
         this.title = title;
         this.posterPath = posterPath;
         this.overview = overview;
         this.releaseDate = releaseDate;
+        this.popularity = popularity;
     }
 
     private Movie(Parcel parcel) {
@@ -55,6 +60,7 @@ public class Movie implements Parcelable {
         this.posterPath = parcel.readString();
         this.overview = parcel.readString();
         this.releaseDate = parcel.readString();
+        this.popularity = parcel.readFloat();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -93,6 +99,10 @@ public class Movie implements Parcelable {
         return releaseDate;
     }
 
+    public float getPopularity() {
+        return popularity;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -106,16 +116,19 @@ public class Movie implements Parcelable {
         parcel.writeString(posterPath);
         parcel.writeString(overview);
         parcel.writeString(releaseDate);
+        parcel.writeFloat(popularity);
     }
 
     @Override
     public String toString() {
         return "Movie{" +
+                "id=" + id +
                 ", voteAverage=" + voteAverage +
                 ", title='" + title + '\'' +
                 ", posterPath='" + posterPath + '\'' +
                 ", overview='" + overview + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
+                ", popularity=" + popularity +
                 '}';
     }
 }

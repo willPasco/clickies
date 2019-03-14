@@ -1,43 +1,31 @@
 package com.willpasco.clickies;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.nightonke.jellytogglebutton.JellyToggleButton;
 import com.nightonke.jellytogglebutton.State;
 import com.willpasco.clickies.model.Movie;
-import com.willpasco.clickies.model.MovieJsonResponse;
-import com.willpasco.clickies.service.RetrofitService;
-import com.willpasco.clickies.service.ServiceGenerator;
 import com.willpasco.clickies.viewmodel.MovieViewModel;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.willpasco.clickies.service.ServiceGenerator.API_KEY;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private static final String POPULAR_SEARCH_TYPE = "popular";
-    private static final String TOP_RATED_SEARCH_TYPE = "top_rated";
+    public static final String POPULAR_SEARCH_TYPE = "popular";
+    public static final String TOP_RATED_SEARCH_TYPE = "top_rated";
     private static final int CONNECTION_CHECK_REQUEST_CODE = 4521;
 
     private MovieRecyclerAdapter adapter;
@@ -62,28 +50,29 @@ public class HomeActivity extends AppCompatActivity {
 
         adapter = new MovieRecyclerAdapter();
 
-/*
+
         jellyToggleButton.setOnStateChangeListener(new JellyToggleButton.OnStateChangeListener() {
             @Override
             public void onStateChange(float process, State state, JellyToggleButton jtb) {
                 if (state == State.LEFT) {
                     showLoadingState();
                     searchType = POPULAR_SEARCH_TYPE;
-                    requestMovies(searchType);
+                    movieViewModel.getListMovieLiveData(searchType);
                 } else if (state == State.RIGHT) {
                     showLoadingState();
                     searchType = TOP_RATED_SEARCH_TYPE;
-                    requestMovies(searchType);
+                    movieViewModel.getListMovieLiveData(searchType);
                 }
             }
         });
-*/
+
 
         GridLayoutManager layoutManager = new GridLayoutManager(HomeActivity.this, 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        movieViewModel.getListMovieLiveData().observe(this, new Observer<List<Movie>>() {
+        MutableLiveData<List<Movie>> movieList = movieViewModel.getListMovieLiveData(searchType);
+        movieList.observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(List<Movie> movies) {
                 showContentState();
@@ -187,7 +176,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     private void showErrorState() {
