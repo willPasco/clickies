@@ -16,7 +16,10 @@ public interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Movie... movies);
 
-    @Query("SELECT * from movie_table")
-    LiveData<List<Movie>> getAllMovies();
+    @Query("SELECT * FROM movie_table ORDER BY popularity DESC")
+    List<Movie> getMoviesByPopular();
+
+    @Query("SELECT * FROM movie_table ORDER BY vote_average DESC")
+    List<Movie> getMoviesByVote();
 
 }
