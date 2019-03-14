@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class TrailerRecyclerAdapter extends RecyclerView.Adapter<TrailerRecyclerAdapter.TrailerViewHolder> {
 
     public static final String BASE_IMAGE_PATH = "http://i3.ytimg.com/vi/id/hqdefault.jpg";
-    private List<Trailer> movieList;
+    private List<Trailer> trailerList;
 
     @NonNull
     @Override
@@ -29,20 +29,24 @@ public class TrailerRecyclerAdapter extends RecyclerView.Adapter<TrailerRecycler
 
     @Override
     public void onBindViewHolder(@NonNull TrailerViewHolder holder, int position) {
-        holder.onBind(movieList.get(position));
+        holder.onBind(trailerList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        if (movieList != null) {
-            return movieList.size();
+        if (trailerList != null) {
+            if (trailerList.size() > 3) {
+                return 3;
+            } else {
+                return trailerList.size();
+            }
         } else {
             return 0;
         }
     }
 
-    public void addAll(List<Trailer> movieList) {
-        this.movieList = movieList;
+    public void addAll(List<Trailer> trailerList) {
+        this.trailerList = trailerList;
         notifyDataSetChanged();
     }
 

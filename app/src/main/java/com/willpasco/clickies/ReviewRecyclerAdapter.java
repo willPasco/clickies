@@ -1,10 +1,13 @@
 package com.willpasco.clickies;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.devs.readmoreoption.ReadMoreOption;
 import com.willpasco.clickies.model.Review;
 
 import java.util.List;
@@ -52,8 +55,23 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
         }
 
         void onBind(final Review model) {
+
+            Context context = textViewAuthor.getContext();
+
+            ReadMoreOption readMoreOption = new ReadMoreOption.Builder(context)
+                    .textLength(3, ReadMoreOption.TYPE_LINE)
+                    .moreLabel(context.getString(R.string.more_text_option))
+                    .lessLabel(context.getString(R.string.less_text_option))
+                    .moreLabelColor(context.getResources().getColor(R.color.color_progress))
+                    .lessLabelColor(context.getResources().getColor(R.color.color_progress))
+                    .labelUnderLine(true)
+                    .expandAnimation(true)
+                    .build();
+
+            readMoreOption.addReadMoreTo(textViewDescription, model.getContent());
+
             textViewAuthor.setText(model.getAuthor());
-            textViewDescription.setText(model.getContent());
+//            textViewDescription.setText(model.getContent());
         }
 
     }
