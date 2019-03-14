@@ -5,6 +5,7 @@ import android.app.Application;
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.model.Trailer;
 import com.willpasco.clickies.repository.MovieRepository;
+import com.willpasco.clickies.service.DataWrapper;
 
 import java.util.List;
 
@@ -16,9 +17,8 @@ import androidx.lifecycle.MutableLiveData;
 public class MovieViewModel extends AndroidViewModel {
 
     private MovieRepository repository;
-    private MutableLiveData<List<Movie>> listMovieMutableLiveData;
-    private MutableLiveData<List<Trailer>> listTrailerMutableLiveData;
-    private LiveData<List<Movie>> listFavoriteMovieLiveData;
+    private MutableLiveData<DataWrapper<List<Movie>>> listMovieMutableLiveData;
+    private MutableLiveData<DataWrapper<List<Trailer>>> listTrailerMutableLiveData;
 
     public MovieViewModel(@NonNull Application application) {
         super(application);
@@ -27,7 +27,7 @@ public class MovieViewModel extends AndroidViewModel {
         listTrailerMutableLiveData = new MutableLiveData<>();
     }
 
-    public MutableLiveData<List<Movie>> getListMovieLiveData() {
+    public MutableLiveData<DataWrapper<List<Movie>>> getListMovieLiveData() {
         return listMovieMutableLiveData;
     }
 
@@ -39,7 +39,7 @@ public class MovieViewModel extends AndroidViewModel {
         return repository.getFavoriteListMovieLiveData();
     }
 
-    public MutableLiveData<List<Trailer>> getListTrailerMutableLiveData() {
+    public MutableLiveData<DataWrapper<List<Trailer>>> getListTrailerMutableLiveData() {
         return listTrailerMutableLiveData;
     }
 
