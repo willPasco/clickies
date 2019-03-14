@@ -14,6 +14,7 @@ import com.willpasco.clickies.service.ServiceGenerator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,85 +23,68 @@ import retrofit2.Response;
 import static com.willpasco.clickies.service.ServiceGenerator.API_KEY;
 
 public class MovieRepository {
+
     private MovieDao dao;
-    private static MutableLiveData<List<Movie>> listMovieMutableLiveData;
 
     public MovieRepository(Application application) {
         ClickiesRoomDatabase db = ClickiesRoomDatabase.getDatabase(application);
         this.dao = db.movieDao();
-        listMovieMutableLiveData = new MutableLiveData<>();
     }
 
-    public MutableLiveData<List<Movie>> getListMovieLiveData(String order) {
-        refreshData(order);
-        new QueryAsyncTask(dao).execute(order);
-        return listMovieMutableLiveData;
+
+    public LiveData<List<Movie>> getFavoriteListMovieLiveData() {
+        return dao.getFavoriteMovies();
     }
 
-    private void refreshData(String order) {
-        RetrofitService service = ServiceGenerator.createService(RetrofitService.class);
+    public void fetchData(final MutableLiveData<List<Movie>> listMovieMutableLiveData, String order) {
 
-        Call<MovieJsonResponse> call = service.getMovies(order, API_KEY);
+            RetrofitService service = ServiceGenerator.createService(RetrofitService.class);
 
-        call.enqueue(new Callback<MovieJsonResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<MovieJsonResponse> call, @NonNull Response<MovieJsonResponse> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        List<Movie> moviesList = response.body().getResults();
-                        Movie[] moviesArray = new Movie[moviesList.size()];
-                        new InsertAsyncTask(dao).execute(moviesList.toArray(moviesArray));
+            Call<MovieJsonResponse> call = service.getMovies(order, API_KEY);
+
+            call.enqueue(new Callback<MovieJsonResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<MovieJsonResponse> call, @NonNull Response<MovieJsonResponse> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            listMovieMutableLiveData.setValue( response.body().getResults());
+                        }
                     }
-
                 }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<MovieJsonResponse> call, @NonNull Throwable t) {
-            }
-        });
+                @Override
+                public void onFailure(@NonNull Call<MovieJsonResponse> call, @NonNull Throwable t) {
+                }
+            });
     }
 
-    private static class QueryAsyncTask extends AsyncTask<String, Void, List<Movie>> {
-
-        private MovieDao asyncTaskDao;
-
-        private QueryAsyncTask(MovieDao asyncTaskDao) {
-            this.asyncTaskDao = asyncTaskDao;
-        }
-
-        @Override
-        protected List<Movie> doInBackground(String... params) {
-            String order = params[0];
-            switch (order) {
-                case HomeActivity.POPULAR_SEARCH_TYPE:
-                    return asyncTaskDao.getMoviesByPopular();
-                case HomeActivity.TOP_RATED_SEARCH_TYPE:
-                    return asyncTaskDao.getMoviesByVote();
-                default:
-                    return asyncTaskDao.getMoviesByPopular();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> movies) {
-            listMovieMutableLiveData.setValue(movies);
-        }
+    public boolean isFavoriteMovie(int id) {
+        Movie movie = dao.getFavoriteMovie(id);
+        return movie != null;
     }
 
-    private static class InsertAsyncTask extends AsyncTask<Movie, Void, Void> {
+    public void insertMovie(Movie model) {
+        model.setFavorite(true);
+        new InsertAsyncTask().execute(model);
+    }
 
-        private MovieDao asyncTaskDao;
+    public void deleteMovie(Movie model) {
+        new DeleteAsyncTaks().execute(model);
+    }
 
-        private InsertAsyncTask(MovieDao asyncTaskDao) {
-            this.asyncTaskDao = asyncTaskDao;
-        }
-
+    private class DeleteAsyncTaks  extends AsyncTask<Movie, Void, Void>{
         @Override
         protected Void doInBackground(Movie... movies) {
-            asyncTaskDao.insert(movies);
+            dao.delete(movies[0]);
             return null;
         }
     }
 
+    private class InsertAsyncTask  extends AsyncTask<Movie, Void, Void>{
+        @Override
+        protected Void doInBackground(Movie... movies) {
+            dao.insert(movies[0]);
+            return null;
+        }
+    }
 }

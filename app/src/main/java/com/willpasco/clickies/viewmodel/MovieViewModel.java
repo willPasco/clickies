@@ -9,12 +9,14 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class MovieViewModel extends AndroidViewModel {
 
     private MovieRepository repository;
     private MutableLiveData<List<Movie>> listMovieMutableLiveData;
+    private LiveData<List<Movie>> listFavoriteMovieLiveData;
 
     public MovieViewModel(@NonNull Application application) {
         super(application);
@@ -22,8 +24,27 @@ public class MovieViewModel extends AndroidViewModel {
         listMovieMutableLiveData = new MutableLiveData<>();
     }
 
-    public MutableLiveData<List<Movie>> getListMovieLiveData(String order) {
-        listMovieMutableLiveData = repository.getListMovieLiveData(order);
+    public MutableLiveData<List<Movie>> getListMovieLiveData() {
         return listMovieMutableLiveData;
+    }
+
+    public void fetchData(String order) {
+        repository.fetchData(listMovieMutableLiveData, order);
+    }
+
+    public LiveData<List<Movie>> getFavoriteListMovieLiveData() {
+        return repository.getFavoriteListMovieLiveData();
+    }
+
+    public boolean isFavoriteMovie(int id) {
+        return repository.isFavoriteMovie(id);
+    }
+
+    public void setMovieFavorite(Movie model) {
+        repository.insertMovie(model);
+    }
+
+    public void setMovieUnFavorite(Movie model) {
+        repository.deleteMovie(model);
     }
 }

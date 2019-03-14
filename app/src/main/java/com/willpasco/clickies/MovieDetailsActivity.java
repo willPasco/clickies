@@ -2,16 +2,21 @@ package com.willpasco.clickies;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.util.ImageLoader;
+import com.willpasco.clickies.viewmodel.MovieViewModel;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 import rjsv.circularview.CircleView;
 
 import static com.willpasco.clickies.MovieRecyclerAdapter.BASE_IMAGE_PATH;
@@ -25,11 +30,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView movieDate;
     private Toolbar toolbar;
     private CircleView voteRated;
+    private MovieViewModel viewModel;
+    private ImageView favoriteIcon;
+    private boolean isFavorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+
+        viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 
         onBindView();
 
@@ -38,22 +48,41 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ActionBar supportActionBar = getSupportActionBar();
+
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
             supportActionBar.setDisplayShowHomeEnabled(true);
         }
+
         if (toolbar.getNavigationIcon() != null) {
             toolbar.getNavigationIcon().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC_ATOP);
         }
 
         Intent intent = getIntent();
         if (intent.hasExtra(MOVIE_EXTRA_KEY)) {
-            Movie model = intent.getParcelableExtra(MOVIE_EXTRA_KEY);
+            final Movie model = intent.getParcelableExtra(MOVIE_EXTRA_KEY);
             movieTitle.setText(model.getTitle());
             movieSynopsis.setText(model.getOverview());
             ImageLoader.loadImageCenterInside(BASE_IMAGE_PATH + model.getPosterPath(), movieImagePoster);
             movieDate.setText(formatDate(model.getReleaseDate()));
             voteRated.setProgressValue(model.getVoteAverage());
+
+            favoriteIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isFavorite){
+                        viewModel.setMovieUnFavorite(model);
+                        isFavorite = false;
+                        changeIcon();
+                    }else{
+                        viewModel.setMovieFavorite(model);
+                        isFavorite = true;
+                        changeIcon();
+                    }
+                }
+            });
+
+            new CheckFavoriteAsyncTask().execute(model.getId());
         }
 
     }
@@ -80,5 +109,28 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieDate = findViewById(R.id.text_view_movie_date);
         toolbar = findViewById(R.id.toolbar);
         voteRated = findViewById(R.id.circle_view_vote_rated);
+        favoriteIcon = findViewById(R.id.image_view_favorite);
+    }
+
+    private class CheckFavoriteAsyncTask extends AsyncTask<Integer, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Integer... integers) {
+            return viewModel.isFavoriteMovie(integers[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean favoriteMovie) {
+            isFavorite = favoriteMovie;
+            changeIcon();
+        }
+    }
+
+    private void changeIcon() {
+        if(isFavorite){
+            ImageLoader.loadImage(R.drawable.ic_favorite, favoriteIcon);
+        }else{
+            ImageLoader.loadImage(R.drawable.ic_unfavorite, favoriteIcon);
+        }
     }
 }

@@ -21,4 +21,10 @@ public class ImageLoader {
                 .transform(new CenterInside(), new RoundedCorners(20))
                 .into(view);
     }
+
+    public static void loadImage(int resId, ImageView view) {
+        Glide.with(view.getContext())
+                .load(resId)
+                .into(view);
+    }
 }

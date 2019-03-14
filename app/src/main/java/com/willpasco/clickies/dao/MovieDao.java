@@ -6,6 +6,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -16,10 +17,12 @@ public interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Movie... movies);
 
-    @Query("SELECT * FROM movie_table ORDER BY popularity DESC")
-    List<Movie> getMoviesByPopular();
+    @Query("SELECT * FROM movie_table WHERE favorite == 1")
+    LiveData<List<Movie>> getFavoriteMovies();
 
-    @Query("SELECT * FROM movie_table ORDER BY vote_average DESC")
-    List<Movie> getMoviesByVote();
+    @Query("SELECT * FROM movie_table WHERE id == :id")
+    Movie getFavoriteMovie(int id);
 
+    @Delete
+    void delete(Movie movie);
 }
