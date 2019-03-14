@@ -4,19 +4,26 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.willpasco.clickies.model.Movie;
+import com.willpasco.clickies.model.Trailer;
 import com.willpasco.clickies.util.ImageLoader;
 import com.willpasco.clickies.viewmodel.MovieViewModel;
+
+import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import rjsv.circularview.CircleView;
 
 import static com.willpasco.clickies.MovieRecyclerAdapter.BASE_IMAGE_PATH;
@@ -32,6 +39,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private CircleView voteRated;
     private MovieViewModel viewModel;
     private ImageView favoriteIcon;
+    private RecyclerView trailerRecyclerView;
+    private TrailerRecyclerAdapter trailerAdapter;
     private boolean isFavorite = false;
 
     @Override
@@ -48,6 +57,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ActionBar supportActionBar = getSupportActionBar();
+
+        trailerAdapter = new TrailerRecyclerAdapter();
+        trailerRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        trailerRecyclerView.setAdapter(trailerAdapter);
 
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
@@ -83,8 +96,20 @@ public class MovieDetailsActivity extends AppCompatActivity {
             });
 
             new CheckFavoriteAsyncTask().execute(model.getId());
+
+            viewModel.getListTrailerMutableLiveData().observe(this, new Observer<List<Trailer>>() {
+                @Override
+                public void onChanged(List<Trailer> trailers) {
+                    trailerAdapter.addAll(trailers);
+                }
+            });
+            loadTrailers(model.getId());
         }
 
+    }
+
+    private void loadTrailers(int id) {
+        viewModel.loadTrailers(id);
     }
 
     private String formatDate(String date) {
@@ -110,6 +135,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         voteRated = findViewById(R.id.circle_view_vote_rated);
         favoriteIcon = findViewById(R.id.image_view_favorite);
+        trailerRecyclerView = findViewById(R.id.recycler_view_trailer);
     }
 
     private class CheckFavoriteAsyncTask extends AsyncTask<Integer, Void, Boolean> {

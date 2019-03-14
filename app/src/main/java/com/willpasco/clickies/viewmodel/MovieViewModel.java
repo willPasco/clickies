@@ -3,6 +3,7 @@ package com.willpasco.clickies.viewmodel;
 import android.app.Application;
 
 import com.willpasco.clickies.model.Movie;
+import com.willpasco.clickies.model.Trailer;
 import com.willpasco.clickies.repository.MovieRepository;
 
 import java.util.List;
@@ -16,12 +17,14 @@ public class MovieViewModel extends AndroidViewModel {
 
     private MovieRepository repository;
     private MutableLiveData<List<Movie>> listMovieMutableLiveData;
+    private MutableLiveData<List<Trailer>> listTrailerMutableLiveData;
     private LiveData<List<Movie>> listFavoriteMovieLiveData;
 
     public MovieViewModel(@NonNull Application application) {
         super(application);
         repository = new MovieRepository(application);
         listMovieMutableLiveData = new MutableLiveData<>();
+        listTrailerMutableLiveData = new MutableLiveData<>();
     }
 
     public MutableLiveData<List<Movie>> getListMovieLiveData() {
@@ -36,6 +39,10 @@ public class MovieViewModel extends AndroidViewModel {
         return repository.getFavoriteListMovieLiveData();
     }
 
+    public MutableLiveData<List<Trailer>> getListTrailerMutableLiveData() {
+        return listTrailerMutableLiveData;
+    }
+
     public boolean isFavoriteMovie(int id) {
         return repository.isFavoriteMovie(id);
     }
@@ -46,5 +53,9 @@ public class MovieViewModel extends AndroidViewModel {
 
     public void setMovieUnFavorite(Movie model) {
         repository.deleteMovie(model);
+    }
+
+    public void loadTrailers(int id) {
+        repository.loadTrailer(listTrailerMutableLiveData, id);
     }
 }

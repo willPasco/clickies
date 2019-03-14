@@ -8,6 +8,8 @@ import com.willpasco.clickies.dao.ClickiesRoomDatabase;
 import com.willpasco.clickies.dao.MovieDao;
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.model.MovieJsonResponse;
+import com.willpasco.clickies.model.Trailer;
+import com.willpasco.clickies.model.TrailerJsonResponse;
 import com.willpasco.clickies.service.RetrofitService;
 import com.willpasco.clickies.service.ServiceGenerator;
 
@@ -70,6 +72,28 @@ public class MovieRepository {
 
     public void deleteMovie(Movie model) {
         new DeleteAsyncTaks().execute(model);
+    }
+
+    public void loadTrailer(final MutableLiveData<List<Trailer>> listTrailerMutableLiveData, int id) {
+        RetrofitService service = ServiceGenerator.createService(RetrofitService.class);
+
+        Call<TrailerJsonResponse> call = service.getTrailer(id, API_KEY);
+
+        call.enqueue(new Callback<TrailerJsonResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<TrailerJsonResponse> call, @NonNull Response<TrailerJsonResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        listTrailerMutableLiveData.setValue( response.body().getResults());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<TrailerJsonResponse> call, @NonNull Throwable t) {
+            }
+        });
+
     }
 
     private class DeleteAsyncTaks  extends AsyncTask<Movie, Void, Void>{
