@@ -5,4 +5,5 @@
     <color name="colorAccent">#0d47a1</color>
     <color name="vote_arc_color">#5CFFFFFF</color>
     <color name="vote_progress_color">#51B1FF</color>
+    <color name="snack_action_color">#51B1FF</color>
 </resources>
