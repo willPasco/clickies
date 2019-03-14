@@ -6,26 +6,50 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "movie_table")
 public class Movie implements Parcelable {
 
+    @SerializedName("id")
+    @Expose
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    private final int id;
     @SerializedName("vote_average")
     @Expose
+    @ColumnInfo(name = "vote_average")
     private final float voteAverage;
     @SerializedName("title")
     @Expose
+    @ColumnInfo(name = "title")
     private final String title;
     @SerializedName("poster_path")
     @Expose
+    @ColumnInfo(name = "poster_path")
     private final String posterPath;
     @SerializedName("overview")
     @Expose
+    @ColumnInfo(name = "overview")
     private final String overview;
     @SerializedName("release_date")
     @Expose
+    @ColumnInfo(name = "release_date")
     private final String releaseDate;
 
+    public Movie(int id, float voteAverage, String title, String posterPath, String overview, String releaseDate) {
+        this.id = id;
+        this.voteAverage = voteAverage;
+        this.title = title;
+        this.posterPath = posterPath;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+    }
 
-    private Movie(Parcel parcel){
+    private Movie(Parcel parcel) {
+        this.id = parcel.readInt();
         this.voteAverage = parcel.readFloat();
         this.title = parcel.readString();
         this.posterPath = parcel.readString();
@@ -45,33 +69,29 @@ public class Movie implements Parcelable {
         }
     };
 
+    public int getId() {
+        return id;
+    }
+
     public float getVoteAverage() {
         return voteAverage;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return title;
     }
 
-
-    public String getPosterPath()
-    {
+    public String getPosterPath() {
         return posterPath;
     }
 
-
-    public String getOverview()
-    {
+    public String getOverview() {
         return overview;
     }
 
-
-    public String getReleaseDate()
-    {
+    public String getReleaseDate() {
         return releaseDate;
     }
-
 
     @Override
     public int describeContents() {
@@ -80,6 +100,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeInt(id);
         parcel.writeFloat(voteAverage);
         parcel.writeString(title);
         parcel.writeString(posterPath);
