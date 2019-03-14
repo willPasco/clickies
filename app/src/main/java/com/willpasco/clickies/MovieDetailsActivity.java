@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.willpasco.clickies.model.Movie;
+import com.willpasco.clickies.model.Review;
 import com.willpasco.clickies.model.Trailer;
 import com.willpasco.clickies.service.DataWrapper;
 import com.willpasco.clickies.util.ImageLoader;
@@ -33,6 +34,8 @@ import static com.willpasco.clickies.MovieRecyclerAdapter.BASE_IMAGE_PATH;
 public class MovieDetailsActivity extends AppCompatActivity {
 
     public static final String MOVIE_EXTRA_KEY = "movie";
+    private boolean isFavorite = false;
+
     private TextView movieTitle;
     private TextView movieSynopsis;
     private ImageView movieImagePoster;
@@ -41,11 +44,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private CircleView voteRated;
     private MovieViewModel viewModel;
     private ImageView favoriteIcon;
+
     private RecyclerView trailerRecyclerView;
     private TrailerRecyclerAdapter trailerAdapter;
     private ProgressBar trailerProgressBar;
     private LinearLayout trailerErrorState;
-    private boolean isFavorite = false;
+
+    private ReviewRecyclerAdapter reviewAdapter;
+    private RecyclerView reviewRecyclerView;
+    private ProgressBar reviewProgressBar;
+    private LinearLayout reviewErrorState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +88,36 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             configTrailerContent(model);
 
+            configReviewContent(model);
+
         }
+
+    }
+
+    private void configReviewContent(Movie model) {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+
+        reviewAdapter = new ReviewRecyclerAdapter();
+        reviewRecyclerView.setLayoutManager(layoutManager);
+        reviewRecyclerView.setAdapter(reviewAdapter);
+
+        viewModel.loadReviews(model.getId());
+        configReviewErrorButton(model.getId());
+
+        viewModel.getListReviewMutableLiveData().observe(this, new Observer<DataWrapper<List<Review>>>() {
+            @Override
+            public void onChanged(DataWrapper<List<Review>> dataWrapper) {
+                if (!dataWrapper.hasError()) {
+                    reviewAdapter.addAll(dataWrapper.getData());
+                    showReviewContentState();
+                    if(trailerAdapter.getItemCount() <=0 ){
+                        showReviewErrorState();
+                    }
+                } else {
+                    showReviewErrorState();
+                }
+            }
+        });
 
     }
 
@@ -91,8 +128,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         trailerRecyclerView.setLayoutManager(layoutManager);
         trailerRecyclerView.setAdapter(trailerAdapter);
 
-        loadTrailers(model.getId());
-        configErrorButton(model.getId());
+        viewModel.loadTrailers(model.getId());
+        configTrailerErrorButton(model.getId());
 
         viewModel.getListTrailerMutableLiveData().observe(this, new Observer<DataWrapper<List<Trailer>>>() {
             @Override
@@ -135,20 +172,17 @@ public class MovieDetailsActivity extends AppCompatActivity {
         new CheckFavoriteAsyncTask().execute(model.getId());
     }
 
-    private void configErrorButton(final int id) {
+    private void configTrailerErrorButton(final int id) {
         Button trailerErrorButton = trailerErrorState.findViewById(R.id.button_retry);
         trailerErrorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTrailerLoadingState();
-                loadTrailers(id);
+                viewModel.loadTrailers(id);
             }
         });
     }
 
-    private void loadTrailers(int id) {
-        viewModel.loadTrailers(id);
-    }
 
     private void showTrailerLoadingState() {
         trailerProgressBar.setVisibility(View.VISIBLE);
@@ -168,7 +202,35 @@ public class MovieDetailsActivity extends AppCompatActivity {
         trailerRecyclerView.setVisibility(View.VISIBLE);
         trailerErrorState.setVisibility(View.GONE);
     }
+    private void configReviewErrorButton(final int id) {
+        Button reviewErrorButton = reviewErrorState.findViewById(R.id.button_retry);
+        reviewErrorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showReviewLoadingState();;
+                viewModel.loadReviews(id);
+            }
+        });
+    }
 
+    private void showReviewLoadingState() {
+        reviewProgressBar.setVisibility(View.VISIBLE);
+        reviewRecyclerView.setVisibility(View.GONE);
+        reviewErrorState.setVisibility(View.GONE);
+    }
+
+    private void showReviewErrorState() {
+        reviewProgressBar.setVisibility(View.GONE);
+        reviewRecyclerView.setVisibility(View.GONE);
+        reviewErrorState.setVisibility(View.VISIBLE);
+    }
+
+
+    private void showReviewContentState(){
+        reviewProgressBar.setVisibility(View.GONE);
+        reviewRecyclerView.setVisibility(View.VISIBLE);
+        reviewErrorState.setVisibility(View.GONE);
+    }
     private String formatDate(String date) {
         String[] strings = date.split("-");
         String day = strings[2];
@@ -192,9 +254,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         voteRated = findViewById(R.id.circle_view_vote_rated);
         favoriteIcon = findViewById(R.id.image_view_favorite);
+
         trailerRecyclerView = findViewById(R.id.recycler_view_trailer);
         trailerProgressBar = findViewById(R.id.progress_bar_trailer);
         trailerErrorState = findViewById(R.id.include_trailer_error_state);
+
+        reviewRecyclerView = findViewById(R.id.recycler_view_review);
+        reviewProgressBar = findViewById(R.id.progress_bar_review);
+        reviewErrorState = findViewById(R.id.include_review_error_state);
     }
 
     private class CheckFavoriteAsyncTask extends AsyncTask<Integer, Void, Boolean> {
