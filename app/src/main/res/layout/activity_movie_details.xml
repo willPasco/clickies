@@ -12,7 +12,8 @@
         android:orientation="vertical"
         android:paddingLeft="@dimen/space_default"
         android:paddingRight="@dimen/space_default"
-        android:paddingBottom="@dimen/space_default">
+        android:paddingBottom="@dimen/space_default"
+        android:descendantFocusability="blocksDescendants">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"

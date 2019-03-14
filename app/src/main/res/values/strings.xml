@@ -9,4 +9,5 @@
     <string name="toast_no_internet_connection">Ainda sem internet, por favor verifique a sua conexão.</string>
     <string name="snack_bar_settings_action">Configurações</string>
     <string name="internet_connected">Internet conectada com sucesso.</string>
+    <string name="details_bottom_no_content_state_description">Não conseguimos recuperar nenhum conteúdo!</string>
 </resources>

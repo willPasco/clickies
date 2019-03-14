@@ -4,11 +4,12 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.model.Trailer;
@@ -42,6 +43,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private ImageView favoriteIcon;
     private RecyclerView trailerRecyclerView;
     private TrailerRecyclerAdapter trailerAdapter;
+    private ProgressBar trailerProgressBar;
+    private LinearLayout trailerErrorState;
     private boolean isFavorite = false;
 
     @Override
@@ -59,9 +62,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         ActionBar supportActionBar = getSupportActionBar();
 
-        trailerAdapter = new TrailerRecyclerAdapter();
-        trailerRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        trailerRecyclerView.setAdapter(trailerAdapter);
 
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
@@ -75,46 +75,98 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(MOVIE_EXTRA_KEY)) {
             final Movie model = intent.getParcelableExtra(MOVIE_EXTRA_KEY);
-            movieTitle.setText(model.getTitle());
-            movieSynopsis.setText(model.getOverview());
-            ImageLoader.loadImageCenterInside(BASE_IMAGE_PATH + model.getPosterPath(), movieImagePoster);
-            movieDate.setText(formatDate(model.getReleaseDate()));
-            voteRated.setProgressValue(model.getVoteAverage());
 
-            favoriteIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(isFavorite){
-                        viewModel.setMovieUnFavorite(model);
-                        isFavorite = false;
-                        changeIcon();
-                    }else{
-                        viewModel.setMovieFavorite(model);
-                        isFavorite = true;
-                        changeIcon();
-                    }
-                }
-            });
+            populateMainContent(model);
 
-            new CheckFavoriteAsyncTask().execute(model.getId());
+            configTrailerContent(model);
 
-            viewModel.getListTrailerMutableLiveData().observe(this, new Observer<DataWrapper<List<Trailer>>>() {
-                @Override
-                public void onChanged(DataWrapper<List<Trailer>> dataWrapper) {
-                    if(!dataWrapper.hasError()){
-                        trailerAdapter.addAll(dataWrapper.getData());
-                    }else{
-                        Toast.makeText(MovieDetailsActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            loadTrailers(model.getId());
         }
 
     }
 
+    private void configTrailerContent(Movie model) {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+
+        trailerAdapter = new TrailerRecyclerAdapter();
+        trailerRecyclerView.setLayoutManager(layoutManager);
+        trailerRecyclerView.setAdapter(trailerAdapter);
+
+        loadTrailers(model.getId());
+        configErrorButton(model.getId());
+
+        viewModel.getListTrailerMutableLiveData().observe(this, new Observer<DataWrapper<List<Trailer>>>() {
+            @Override
+            public void onChanged(DataWrapper<List<Trailer>> dataWrapper) {
+                if (!dataWrapper.hasError()) {
+                    trailerAdapter.addAll(dataWrapper.getData());
+                    showTrailerContentState();
+                    if(trailerAdapter.getItemCount() <=0 ){
+                        showTrailerErrorState();
+                    }
+                } else {
+                    showTrailerErrorState();
+                }
+            }
+        });
+    }
+
+    private void populateMainContent(final Movie model) {
+        movieTitle.setText(model.getTitle());
+        movieSynopsis.setText(model.getOverview());
+        ImageLoader.loadImageCenterInside(BASE_IMAGE_PATH + model.getPosterPath(), movieImagePoster);
+        movieDate.setText(formatDate(model.getReleaseDate()));
+        voteRated.setProgressValue(model.getVoteAverage());
+
+        favoriteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isFavorite) {
+                    viewModel.setMovieUnFavorite(model);
+                    isFavorite = false;
+                    changeIcon();
+                } else {
+                    viewModel.setMovieFavorite(model);
+                    isFavorite = true;
+                    changeIcon();
+                }
+            }
+        });
+
+        new CheckFavoriteAsyncTask().execute(model.getId());
+    }
+
+    private void configErrorButton(final int id) {
+        Button trailerErrorButton = trailerErrorState.findViewById(R.id.button_retry);
+        trailerErrorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTrailerLoadingState();
+                loadTrailers(id);
+            }
+        });
+    }
+
     private void loadTrailers(int id) {
         viewModel.loadTrailers(id);
+    }
+
+    private void showTrailerLoadingState() {
+        trailerProgressBar.setVisibility(View.VISIBLE);
+        trailerRecyclerView.setVisibility(View.GONE);
+        trailerErrorState.setVisibility(View.GONE);
+    }
+
+    private void showTrailerErrorState() {
+        trailerProgressBar.setVisibility(View.GONE);
+        trailerRecyclerView.setVisibility(View.GONE);
+        trailerErrorState.setVisibility(View.VISIBLE);
+    }
+
+
+    private void showTrailerContentState(){
+        trailerProgressBar.setVisibility(View.GONE);
+        trailerRecyclerView.setVisibility(View.VISIBLE);
+        trailerErrorState.setVisibility(View.GONE);
     }
 
     private String formatDate(String date) {
@@ -141,6 +193,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         voteRated = findViewById(R.id.circle_view_vote_rated);
         favoriteIcon = findViewById(R.id.image_view_favorite);
         trailerRecyclerView = findViewById(R.id.recycler_view_trailer);
+        trailerProgressBar = findViewById(R.id.progress_bar_trailer);
+        trailerErrorState = findViewById(R.id.include_trailer_error_state);
     }
 
     private class CheckFavoriteAsyncTask extends AsyncTask<Integer, Void, Boolean> {
@@ -158,9 +212,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private void changeIcon() {
-        if(isFavorite){
+        if (isFavorite) {
             ImageLoader.loadImage(R.drawable.ic_favorite, favoriteIcon);
-        }else{
+        } else {
             ImageLoader.loadImage(R.drawable.ic_unfavorite, favoriteIcon);
         }
     }
