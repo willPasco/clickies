@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.model.Trailer;
+import com.willpasco.clickies.service.DataWrapper;
 import com.willpasco.clickies.util.ImageLoader;
 import com.willpasco.clickies.viewmodel.MovieViewModel;
 
@@ -97,10 +98,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             new CheckFavoriteAsyncTask().execute(model.getId());
 
-            viewModel.getListTrailerMutableLiveData().observe(this, new Observer<List<Trailer>>() {
+            viewModel.getListTrailerMutableLiveData().observe(this, new Observer<DataWrapper<List<Trailer>>>() {
                 @Override
-                public void onChanged(List<Trailer> trailers) {
-                    trailerAdapter.addAll(trailers);
+                public void onChanged(DataWrapper<List<Trailer>> dataWrapper) {
+                    if(!dataWrapper.hasError()){
+                        trailerAdapter.addAll(dataWrapper.getData());
+                    }else{
+                        Toast.makeText(MovieDetailsActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
             loadTrailers(model.getId());

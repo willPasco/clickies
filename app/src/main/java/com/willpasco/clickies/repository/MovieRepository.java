@@ -3,13 +3,13 @@ package com.willpasco.clickies.repository;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import com.willpasco.clickies.HomeActivity;
 import com.willpasco.clickies.dao.ClickiesRoomDatabase;
 import com.willpasco.clickies.dao.MovieDao;
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.model.MovieJsonResponse;
 import com.willpasco.clickies.model.Trailer;
 import com.willpasco.clickies.model.TrailerJsonResponse;
+import com.willpasco.clickies.service.DataWrapper;
 import com.willpasco.clickies.service.RetrofitService;
 import com.willpasco.clickies.service.ServiceGenerator;
 
@@ -38,7 +38,7 @@ public class MovieRepository {
         return dao.getFavoriteMovies();
     }
 
-    public void fetchData(final MutableLiveData<List<Movie>> listMovieMutableLiveData, String order) {
+    public void fetchData(final MutableLiveData<DataWrapper<List<Movie>>> listMovieMutableLiveData, String order) {
 
             RetrofitService service = ServiceGenerator.createService(RetrofitService.class);
 
@@ -49,13 +49,19 @@ public class MovieRepository {
                 public void onResponse(@NonNull Call<MovieJsonResponse> call, @NonNull Response<MovieJsonResponse> response) {
                     if (response.isSuccessful()) {
                         if (response.body() != null) {
-                            listMovieMutableLiveData.setValue( response.body().getResults());
+                            DataWrapper<List<Movie>> dataWrapper = new DataWrapper<>(response.body().getResults(), null);
+                            listMovieMutableLiveData.setValue(dataWrapper);
                         }
+                    }else{
+                        DataWrapper<List<Movie>> dataWrapper = new DataWrapper<>(null, response.message());
+                        listMovieMutableLiveData.setValue(dataWrapper);
                     }
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<MovieJsonResponse> call, @NonNull Throwable t) {
+                public void onFailure(@NonNull Call<MovieJsonResponse> call, @NonNull Throwable error) {
+                    DataWrapper<List<Movie>> dataWrapper = new DataWrapper<>(null, error.getMessage());
+                    listMovieMutableLiveData.setValue(dataWrapper);
                 }
             });
     }
@@ -74,7 +80,7 @@ public class MovieRepository {
         new DeleteAsyncTaks().execute(model);
     }
 
-    public void loadTrailer(final MutableLiveData<List<Trailer>> listTrailerMutableLiveData, int id) {
+    public void loadTrailer(final MutableLiveData<DataWrapper<List<Trailer>>> listTrailerMutableLiveData, int id) {
         RetrofitService service = ServiceGenerator.createService(RetrofitService.class);
 
         Call<TrailerJsonResponse> call = service.getTrailer(id, API_KEY);
@@ -84,13 +90,19 @@ public class MovieRepository {
             public void onResponse(@NonNull Call<TrailerJsonResponse> call, @NonNull Response<TrailerJsonResponse> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
-                        listTrailerMutableLiveData.setValue( response.body().getResults());
+                        DataWrapper<List<Trailer>> dataWrapper = new DataWrapper<>(response.body().getResults(), null);
+                        listTrailerMutableLiveData.setValue(dataWrapper);
                     }
+                }else{
+                    DataWrapper<List<Trailer>> dataWrapper = new DataWrapper<>(null, response.message());
+                    listTrailerMutableLiveData.setValue(dataWrapper);
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<TrailerJsonResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<TrailerJsonResponse> call, @NonNull Throwable error) {
+                DataWrapper<List<Trailer>> dataWrapper = new DataWrapper<>(null, error.getMessage());
+                listTrailerMutableLiveData.setValue(dataWrapper);
             }
         });
 

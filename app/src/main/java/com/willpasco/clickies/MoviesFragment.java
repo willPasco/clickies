@@ -18,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.nightonke.jellytogglebutton.JellyToggleButton;
 import com.nightonke.jellytogglebutton.State;
 import com.willpasco.clickies.model.Movie;
+import com.willpasco.clickies.service.DataWrapper;
 import com.willpasco.clickies.viewmodel.MovieViewModel;
 
 import java.util.List;
@@ -99,20 +100,24 @@ public class MoviesFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        movieViewModel.getListMovieLiveData().observe(this, new Observer<List<Movie>>() {
+        movieViewModel.getListMovieLiveData().observe(this, new Observer<DataWrapper<List<Movie>>>() {
             @Override
-            public void onChanged(List<Movie> movies) {
-                showContentState();
-                adapter.addAll(movies);
+            public void onChanged(DataWrapper<List<Movie>> dataWrapper) {
+                if(!dataWrapper.hasError()) {
+                    showContentState();
+                    adapter.addAll(dataWrapper.getData());
 
-                dismissRefreshing();
+                    dismissRefreshing();
 
-                if (adapter.getItemCount() <= 0) {
+                    if (adapter.getItemCount() <= 0) {
+                        showNoContentState();
+                    }
+                }else{
+                    dismissRefreshing();
                     showNoContentState();
                 }
             }
         });
-
         movieViewModel.fetchData(searchType);
 
     }
