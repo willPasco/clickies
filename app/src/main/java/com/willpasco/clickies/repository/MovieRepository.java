@@ -25,17 +25,15 @@ import static com.willpasco.clickies.service.ServiceGenerator.API_KEY;
 public class MovieRepository {
 
     private MovieDao dao;
-    private LiveData<List<Movie>> listMovieLiveData;
 
     public MovieRepository(Application application) {
         ClickiesRoomDatabase db = ClickiesRoomDatabase.getDatabase(application);
         this.dao = db.movieDao();
-        this.listMovieLiveData = dao.getFavoriteMovies();
     }
 
 
     public LiveData<List<Movie>> getFavoriteListMovieLiveData() {
-        return listMovieLiveData;
+        return dao.getFavoriteMovies();
     }
 
     public void fetchData(final MutableLiveData<List<Movie>> listMovieMutableLiveData, String order) {
@@ -60,4 +58,33 @@ public class MovieRepository {
             });
     }
 
+    public boolean isFavoriteMovie(int id) {
+        Movie movie = dao.getFavoriteMovie(id);
+        return movie != null;
+    }
+
+    public void insertMovie(Movie model) {
+        model.setFavorite(true);
+        new InsertAsyncTask().execute(model);
+    }
+
+    public void deleteMovie(Movie model) {
+        new DeleteAsyncTaks().execute(model);
+    }
+
+    private class DeleteAsyncTaks  extends AsyncTask<Movie, Void, Void>{
+        @Override
+        protected Void doInBackground(Movie... movies) {
+            dao.delete(movies[0]);
+            return null;
+        }
+    }
+
+    private class InsertAsyncTask  extends AsyncTask<Movie, Void, Void>{
+        @Override
+        protected Void doInBackground(Movie... movies) {
+            dao.insert(movies[0]);
+            return null;
+        }
+    }
 }

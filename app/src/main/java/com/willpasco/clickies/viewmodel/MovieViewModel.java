@@ -22,7 +22,6 @@ public class MovieViewModel extends AndroidViewModel {
         super(application);
         repository = new MovieRepository(application);
         listMovieMutableLiveData = new MutableLiveData<>();
-        listFavoriteMovieLiveData = repository.getFavoriteListMovieLiveData();
     }
 
     public MutableLiveData<List<Movie>> getListMovieLiveData() {
@@ -34,7 +33,18 @@ public class MovieViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Movie>> getFavoriteListMovieLiveData() {
-        listFavoriteMovieLiveData = repository.getFavoriteListMovieLiveData();
-        return listFavoriteMovieLiveData;
+        return repository.getFavoriteListMovieLiveData();
+    }
+
+    public boolean isFavoriteMovie(int id) {
+        return repository.isFavoriteMovie(id);
+    }
+
+    public void setMovieFavorite(Movie model) {
+        repository.insertMovie(model);
+    }
+
+    public void setMovieUnFavorite(Movie model) {
+        repository.deleteMovie(model);
     }
 }
