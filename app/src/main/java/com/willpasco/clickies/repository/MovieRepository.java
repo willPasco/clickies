@@ -23,89 +23,41 @@ import retrofit2.Response;
 import static com.willpasco.clickies.service.ServiceGenerator.API_KEY;
 
 public class MovieRepository {
+
     private MovieDao dao;
-    private static MutableLiveData<List<Movie>> listMovieMutableLiveData;
+    private LiveData<List<Movie>> listMovieLiveData;
 
     public MovieRepository(Application application) {
         ClickiesRoomDatabase db = ClickiesRoomDatabase.getDatabase(application);
         this.dao = db.movieDao();
-        listMovieMutableLiveData = new MutableLiveData<>();
+        this.listMovieLiveData = dao.getFavoriteMovies();
     }
 
-    public MutableLiveData<List<Movie>> getListMovieLiveData(String order) {
-        refreshData(order);
-        new QueryAsyncTask(dao).execute(order);
-        return listMovieMutableLiveData;
-    }
-
-    private void refreshData(String order) {
-        RetrofitService service = ServiceGenerator.createService(RetrofitService.class);
-
-        Call<MovieJsonResponse> call = service.getMovies(order, API_KEY);
-
-        call.enqueue(new Callback<MovieJsonResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<MovieJsonResponse> call, @NonNull Response<MovieJsonResponse> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        List<Movie> moviesList = response.body().getResults();
-                        Movie[] moviesArray = new Movie[moviesList.size()];
-                        new InsertAsyncTask(dao).execute(moviesList.toArray(moviesArray));
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<MovieJsonResponse> call, @NonNull Throwable t) {
-            }
-        });
-    }
 
     public LiveData<List<Movie>> getFavoriteListMovieLiveData() {
-        return dao.getFavoriteMovies();
+        return listMovieLiveData;
     }
 
-    private static class QueryAsyncTask extends AsyncTask<String, Void, List<Movie>> {
+    public void fetchData(final MutableLiveData<List<Movie>> listMovieMutableLiveData, String order) {
 
-        private MovieDao asyncTaskDao;
+            RetrofitService service = ServiceGenerator.createService(RetrofitService.class);
 
-        private QueryAsyncTask(MovieDao asyncTaskDao) {
-            this.asyncTaskDao = asyncTaskDao;
-        }
+            Call<MovieJsonResponse> call = service.getMovies(order, API_KEY);
 
-        @Override
-        protected List<Movie> doInBackground(String... params) {
-            String order = params[0];
-            switch (order) {
-                case HomeActivity.POPULAR_SEARCH_TYPE:
-                    return asyncTaskDao.getMoviesByPopular();
-                case HomeActivity.TOP_RATED_SEARCH_TYPE:
-                    return asyncTaskDao.getMoviesByVote();
-                default:
-                    return asyncTaskDao.getMoviesByPopular();
-            }
-        }
+            call.enqueue(new Callback<MovieJsonResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<MovieJsonResponse> call, @NonNull Response<MovieJsonResponse> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            listMovieMutableLiveData.setValue( response.body().getResults());
+                        }
+                    }
+                }
 
-        @Override
-        protected void onPostExecute(List<Movie> movies) {
-            listMovieMutableLiveData.setValue(movies);
-        }
-    }
-
-    private static class InsertAsyncTask extends AsyncTask<Movie, Void, Void> {
-
-        private MovieDao asyncTaskDao;
-
-        private InsertAsyncTask(MovieDao asyncTaskDao) {
-            this.asyncTaskDao = asyncTaskDao;
-        }
-
-        @Override
-        protected Void doInBackground(Movie... movies) {
-            asyncTaskDao.insert(movies);
-            return null;
-        }
+                @Override
+                public void onFailure(@NonNull Call<MovieJsonResponse> call, @NonNull Throwable t) {
+                }
+            });
     }
 
 }

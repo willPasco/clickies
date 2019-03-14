@@ -22,11 +22,15 @@ public class MovieViewModel extends AndroidViewModel {
         super(application);
         repository = new MovieRepository(application);
         listMovieMutableLiveData = new MutableLiveData<>();
+        listFavoriteMovieLiveData = repository.getFavoriteListMovieLiveData();
     }
 
-    public MutableLiveData<List<Movie>> getListMovieLiveData(String order) {
-        listMovieMutableLiveData = repository.getListMovieLiveData(order);
+    public MutableLiveData<List<Movie>> getListMovieLiveData() {
         return listMovieMutableLiveData;
+    }
+
+    public void fetchData(String order) {
+        repository.fetchData(listMovieMutableLiveData, order);
     }
 
     public LiveData<List<Movie>> getFavoriteListMovieLiveData() {

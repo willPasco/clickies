@@ -71,6 +71,7 @@ public class MoviesFragment extends Fragment {
         onBindView(view);
 
         adapter = new MovieRecyclerAdapter();
+        refreshData();
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -94,14 +95,11 @@ public class MoviesFragment extends Fragment {
             }
         });
 
-        refreshData();
-
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        MutableLiveData<List<Movie>> listMovieMutableLiveData = movieViewModel.getListMovieLiveData(searchType);
-        listMovieMutableLiveData.observe(this, new Observer<List<Movie>>() {
+        movieViewModel.getListMovieLiveData().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(List<Movie> movies) {
                 showContentState();
@@ -114,6 +112,8 @@ public class MoviesFragment extends Fragment {
                 }
             }
         });
+
+        movieViewModel.fetchData(searchType);
 
     }
 
@@ -128,7 +128,7 @@ public class MoviesFragment extends Fragment {
             dismissRefreshing();
             showNoNetworkState();
         } else {
-            movieViewModel.getListMovieLiveData(searchType);
+            movieViewModel.fetchData(searchType);
         }
     }
 
@@ -155,11 +155,7 @@ public class MoviesFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CONNECTION_CHECK_REQUEST_CODE) {
-            if (noInternetConnection()) {
-                showNoNetworkState();
-            } else {
-                Toast.makeText(getContext(), R.string.internet_connected, Toast.LENGTH_SHORT).show();
-            }
+            refreshData();
         }
     }
 
