@@ -14,6 +14,7 @@ import com.willpasco.clickies.service.ServiceGenerator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,6 +60,10 @@ public class MovieRepository {
             public void onFailure(@NonNull Call<MovieJsonResponse> call, @NonNull Throwable t) {
             }
         });
+    }
+
+    public LiveData<List<Movie>> getFavoriteListMovieLiveData() {
+        return dao.getFavoriteMovies();
     }
 
     private static class QueryAsyncTask extends AsyncTask<String, Void, List<Movie>> {

@@ -22,4 +22,6 @@ public interface MovieDao {
     @Query("SELECT * FROM movie_table ORDER BY vote_average DESC")
     List<Movie> getMoviesByVote();
 
+    @Query("SELECT * FROM movie_table WHERE favorite == 0")
+    LiveData<List<Movie>> getFavoriteMovies();
 }
