@@ -14,12 +14,18 @@ import android.widget.Toast;
 
 import com.nightonke.jellytogglebutton.JellyToggleButton;
 import com.nightonke.jellytogglebutton.State;
+import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.model.MovieJsonResponse;
 import com.willpasco.clickies.service.RetrofitService;
 import com.willpasco.clickies.service.ServiceGenerator;
+import com.willpasco.clickies.viewmodel.MovieViewModel;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -41,18 +47,22 @@ public class HomeActivity extends AppCompatActivity {
     private LinearLayout errorState;
     private LinearLayout noNetWorkState;
     private String searchType = POPULAR_SEARCH_TYPE;
+    private MovieViewModel movieViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+
         onBindView();
-        configErrorButton();
+//        configErrorButton();
         configNoNetworkButton();
 
         adapter = new MovieRecyclerAdapter();
 
+/*
         jellyToggleButton.setOnStateChangeListener(new JellyToggleButton.OnStateChangeListener() {
             @Override
             public void onStateChange(float process, State state, JellyToggleButton jtb) {
@@ -67,52 +77,30 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+*/
 
         GridLayoutManager layoutManager = new GridLayoutManager(HomeActivity.this, 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        requestMovies(searchType);
+        movieViewModel.getListMovieLiveData().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(List<Movie> movies) {
+                showContentState();
+                adapter.addAll(movies);
+            }
+        });
+
+//        requestMovies(searchType);
     }
 
+/*
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    private void configErrorButton() {
-        Button retryButton = errorState.findViewById(R.id.button_retry);
-
-        retryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLoadingState();
-                requestMovies(searchType);
-            }
-        });
-    }
-
-    private void configNoNetworkButton() {
-        Button buttonConfig = noNetWorkState.findViewById(R.id.button_config);
-
-        buttonConfig.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLoadingState();
-                Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
-                startActivityForResult(intent, HomeActivity.CONNECTION_CHECK_REQUEST_CODE);
-            }
-        });
-    }
-
-    private void onBindView() {
-        recyclerView = findViewById(R.id.recycler_view);
-        progressBar = findViewById(R.id.progress_bar);
-        jellyToggleButton = findViewById(R.id.jellyToggleButton);
-        errorState = findViewById(R.id.include_error_state);
-        noNetWorkState = findViewById(R.id.include_no_network_state);
-    }
 
 
     private void requestMovies(String order) {
@@ -149,7 +137,18 @@ public class HomeActivity extends AppCompatActivity {
         }
 
     }
+*/
 
+    private void onBindView() {
+        recyclerView = findViewById(R.id.recycler_view);
+        progressBar = findViewById(R.id.progress_bar);
+        jellyToggleButton = findViewById(R.id.jellyToggleButton);
+        errorState = findViewById(R.id.include_error_state);
+        noNetWorkState = findViewById(R.id.include_no_network_state);
+    }
+
+
+/*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -162,6 +161,33 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void configErrorButton() {
+        Button retryButton = errorState.findViewById(R.id.button_retry);
+
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoadingState();
+                requestMovies(searchType);
+            }
+        });
+    }
+*/
+
+    private void configNoNetworkButton() {
+        Button buttonConfig = noNetWorkState.findViewById(R.id.button_config);
+
+        buttonConfig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoadingState();
+                Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                startActivityForResult(intent, HomeActivity.CONNECTION_CHECK_REQUEST_CODE);
+            }
+        });
+    }
+
 
 
     private void showErrorState() {
