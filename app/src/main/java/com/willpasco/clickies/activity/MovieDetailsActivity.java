@@ -1,4 +1,4 @@
-package com.willpasco.clickies;
+package com.willpasco.clickies.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.willpasco.clickies.R;
+import com.willpasco.clickies.adapter.ReviewRecyclerAdapter;
+import com.willpasco.clickies.adapter.TrailerRecyclerAdapter;
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.model.Review;
 import com.willpasco.clickies.model.Trailer;
@@ -34,8 +37,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import rjsv.circularview.CircleView;
 
-import static com.willpasco.clickies.MovieRecyclerAdapter.BASE_IMAGE_PATH;
-import static com.willpasco.clickies.MoviesFragment.CONNECTION_CHECK_REQUEST_CODE;
+import static com.willpasco.clickies.adapter.MovieRecyclerAdapter.BASE_IMAGE_PATH;
+import static com.willpasco.clickies.fragment.MoviesFragment.CONNECTION_CHECK_REQUEST_CODE;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
@@ -118,7 +121,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         viewModel.getListReviewMutableLiveData().observe(this, new Observer<DataWrapper<List<Review>>>() {
             @Override
             public void onChanged(DataWrapper<List<Review>> dataWrapper) {
-                if (!dataWrapper.hasError()) {
+                if (dataWrapper.checkError()) {
                     reviewAdapter.addAll(dataWrapper.getData());
                     showReviewContentState();
                     if (trailerAdapter.getItemCount() <= 0) {
@@ -145,7 +148,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         viewModel.getListTrailerMutableLiveData().observe(this, new Observer<DataWrapper<List<Trailer>>>() {
             @Override
             public void onChanged(DataWrapper<List<Trailer>> dataWrapper) {
-                if (!dataWrapper.hasError()) {
+                if (dataWrapper.checkError()) {
                     trailerAdapter.addAll(dataWrapper.getData());
                     showTrailerContentState();
                     if (trailerAdapter.getItemCount() <= 0) {
@@ -311,6 +314,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
     }
 
+    private void changeIcon() {
+        if (isFavorite) {
+            ImageLoader.loadImage(R.drawable.ic_favorite, favoriteIcon);
+        } else {
+            ImageLoader.loadImage(R.drawable.ic_unfavorite, favoriteIcon);
+        }
+    }
+
     private class CheckFavoriteAsyncTask extends AsyncTask<Integer, Void, Boolean> {
 
         @Override
@@ -322,14 +333,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean favoriteMovie) {
             isFavorite = favoriteMovie;
             changeIcon();
-        }
-    }
-
-    private void changeIcon() {
-        if (isFavorite) {
-            ImageLoader.loadImage(R.drawable.ic_favorite, favoriteIcon);
-        } else {
-            ImageLoader.loadImage(R.drawable.ic_unfavorite, favoriteIcon);
         }
     }
 }

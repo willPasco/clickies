@@ -15,6 +15,7 @@ public class ImageLoader {
                 .transform(new CenterCrop(), new RoundedCorners(20))
                 .into(view);
     }
+
     public static void loadImageCenterInside(String url, ImageView view) {
         Glide.with(view.getContext())
                 .load(url)

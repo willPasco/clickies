@@ -42,30 +42,30 @@ public class MovieRepository {
 
     public void fetchData(final MutableLiveData<DataWrapper<List<Movie>>> listMovieMutableLiveData, String order) {
 
-            RetrofitService service = ServiceGenerator.createService(RetrofitService.class);
+        RetrofitService service = ServiceGenerator.createService(RetrofitService.class);
 
-            Call<MovieJsonResponse> call = service.getMovies(order, API_KEY);
+        Call<MovieJsonResponse> call = service.getMovies(order, API_KEY);
 
-            call.enqueue(new Callback<MovieJsonResponse>() {
-                @Override
-                public void onResponse(@NonNull Call<MovieJsonResponse> call, @NonNull Response<MovieJsonResponse> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() != null) {
-                            DataWrapper<List<Movie>> dataWrapper = new DataWrapper<>(response.body().getResults(), null);
-                            listMovieMutableLiveData.setValue(dataWrapper);
-                        }
-                    }else{
-                        DataWrapper<List<Movie>> dataWrapper = new DataWrapper<>(null, response.message());
+        call.enqueue(new Callback<MovieJsonResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieJsonResponse> call, @NonNull Response<MovieJsonResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        DataWrapper<List<Movie>> dataWrapper = new DataWrapper<>(response.body().getResults(), null);
                         listMovieMutableLiveData.setValue(dataWrapper);
                     }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<MovieJsonResponse> call, @NonNull Throwable error) {
-                    DataWrapper<List<Movie>> dataWrapper = new DataWrapper<>(null, error.getMessage());
+                } else {
+                    DataWrapper<List<Movie>> dataWrapper = new DataWrapper<>(null, response.message());
                     listMovieMutableLiveData.setValue(dataWrapper);
                 }
-            });
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieJsonResponse> call, @NonNull Throwable error) {
+                DataWrapper<List<Movie>> dataWrapper = new DataWrapper<>(null, error.getMessage());
+                listMovieMutableLiveData.setValue(dataWrapper);
+            }
+        });
     }
 
     public boolean isFavoriteMovie(int id) {
@@ -75,11 +75,11 @@ public class MovieRepository {
 
     public void insertMovie(Movie model) {
         model.setFavorite(true);
-        new InsertAsyncTask().execute(model);
+        new InsertAsyncTask(dao).execute(model);
     }
 
     public void deleteMovie(Movie model) {
-        new DeleteAsyncTaks().execute(model);
+        new DeleteAsyncTask(dao).execute(model);
     }
 
     public void loadTrailer(final MutableLiveData<DataWrapper<List<Trailer>>> listTrailerMutableLiveData, int id) {
@@ -95,7 +95,7 @@ public class MovieRepository {
                         DataWrapper<List<Trailer>> dataWrapper = new DataWrapper<>(response.body().getResults(), null);
                         listTrailerMutableLiveData.setValue(dataWrapper);
                     }
-                }else{
+                } else {
                     DataWrapper<List<Trailer>> dataWrapper = new DataWrapper<>(null, response.message());
                     listTrailerMutableLiveData.setValue(dataWrapper);
                 }
@@ -123,7 +123,7 @@ public class MovieRepository {
                         DataWrapper<List<Review>> dataWrapper = new DataWrapper<>(response.body().getResults(), null);
                         listReviewMutableLiveData.setValue(dataWrapper);
                     }
-                }else{
+                } else {
                     DataWrapper<List<Review>> dataWrapper = new DataWrapper<>(null, response.message());
                     listReviewMutableLiveData.setValue(dataWrapper);
                 }
@@ -138,18 +138,32 @@ public class MovieRepository {
 
     }
 
-    private class DeleteAsyncTaks  extends AsyncTask<Movie, Void, Void>{
+    private static class DeleteAsyncTask extends AsyncTask<Movie, Void, Void> {
+
+        private MovieDao dao;
+
+        private DeleteAsyncTask(MovieDao dao) {
+            this.dao = dao;
+        }
+
         @Override
         protected Void doInBackground(Movie... movies) {
-            dao.delete(movies[0]);
+            this.dao.delete(movies[0]);
             return null;
         }
     }
 
-    private class InsertAsyncTask  extends AsyncTask<Movie, Void, Void>{
+    private static class InsertAsyncTask extends AsyncTask<Movie, Void, Void> {
+
+        private MovieDao dao;
+
+        private InsertAsyncTask(MovieDao dao) {
+            this.dao = dao;
+        }
+
         @Override
         protected Void doInBackground(Movie... movies) {
-            dao.insert(movies[0]);
+            this.dao.insert(movies[0]);
             return null;
         }
     }

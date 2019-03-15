@@ -1,11 +1,14 @@
-package com.willpasco.clickies;
+package com.willpasco.clickies.adapter;
+
+import com.willpasco.clickies.fragment.FavoriteFragment;
+import com.willpasco.clickies.fragment.MoviesFragment;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-class HomeAdapter extends FragmentPagerAdapter {
+public class HomeAdapter extends FragmentPagerAdapter {
 
     public HomeAdapter(@NonNull FragmentManager fm) {
         super(fm);

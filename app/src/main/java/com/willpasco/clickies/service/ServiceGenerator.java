@@ -12,8 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    private static final String BASE_URL = "https://api.themoviedb.org/";
     public static final String API_KEY = BuildConfig.API_KEY;
+    private static final String BASE_URL = "https://api.themoviedb.org/";
 
     public static <S> S createService(Class<S> serviceClass) {
 

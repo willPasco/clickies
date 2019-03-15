@@ -17,7 +17,7 @@
         android:id="@+id/button_retry"
         android:padding="@dimen/space_medium"
         android:layout_gravity="center"
-        android:text="Tentar novamente"
+        android:text="@string/button_retry"
         android:layout_marginTop="@dimen/space_medium"
         android:layout_width="wrap_content"
         android:textColor="@android:color/white"

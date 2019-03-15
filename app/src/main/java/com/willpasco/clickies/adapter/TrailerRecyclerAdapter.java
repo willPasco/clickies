@@ -1,4 +1,4 @@
-package com.willpasco.clickies;
+package com.willpasco.clickies.adapter;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.willpasco.clickies.R;
 import com.willpasco.clickies.model.Trailer;
 import com.willpasco.clickies.util.ImageLoader;
 

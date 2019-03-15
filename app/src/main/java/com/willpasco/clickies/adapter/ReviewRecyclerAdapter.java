@@ -1,13 +1,13 @@
-package com.willpasco.clickies;
+package com.willpasco.clickies.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.devs.readmoreoption.ReadMoreOption;
+import com.willpasco.clickies.R;
 import com.willpasco.clickies.model.Review;
 
 import java.util.List;

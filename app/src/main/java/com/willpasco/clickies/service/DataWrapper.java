@@ -13,7 +13,7 @@ public class DataWrapper<T> {
         return data;
     }
 
-    public boolean hasError(){
-        return errorMessage != null;
+    public boolean checkError() {
+        return errorMessage == null;
     }
 }

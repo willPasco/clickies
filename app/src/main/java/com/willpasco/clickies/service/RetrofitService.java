@@ -16,8 +16,8 @@ public interface RetrofitService {
     Call<MovieJsonResponse> getMovies(@Path("order") String order, @Query("api_key") String key);
 
     @GET("/3/movie/{id}/videos")
-    Call<TrailerJsonResponse> getTrailers(@Path ("id") int id, @Query("api_key") String apiKey);
+    Call<TrailerJsonResponse> getTrailers(@Path("id") int id, @Query("api_key") String apiKey);
 
     @GET("/3/movie/{id}/reviews")
-    Call<ReviewJsonResponse> getReviews(@Path ("id") int id, @Query("api_key") String apiKey);
+    Call<ReviewJsonResponse> getReviews(@Path("id") int id, @Query("api_key") String apiKey);
 }

@@ -35,7 +35,8 @@
             android:src="@drawable/ic_unfavorite"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar"
             app:layout_constraintEnd_toEndOf="@+id/toolbar"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/favorite_icon_content_description" />
 
         <ImageView
             android:id="@+id/image_view_movie_poster"

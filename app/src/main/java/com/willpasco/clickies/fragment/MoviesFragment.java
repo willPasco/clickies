@@ -1,4 +1,4 @@
-package com.willpasco.clickies;
+package com.willpasco.clickies.fragment;
 
 
 import android.content.Context;
@@ -12,11 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.nightonke.jellytogglebutton.JellyToggleButton;
 import com.nightonke.jellytogglebutton.State;
+import com.willpasco.clickies.R;
+import com.willpasco.clickies.adapter.MovieRecyclerAdapter;
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.service.DataWrapper;
 import com.willpasco.clickies.viewmodel.MovieViewModel;
@@ -26,15 +27,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import static com.willpasco.clickies.HomeActivity.POPULAR_SEARCH_TYPE;
-import static com.willpasco.clickies.HomeActivity.TOP_RATED_SEARCH_TYPE;
+import static com.willpasco.clickies.activity.HomeActivity.POPULAR_SEARCH_TYPE;
+import static com.willpasco.clickies.activity.HomeActivity.TOP_RATED_SEARCH_TYPE;
 
 
 /**
@@ -103,7 +103,7 @@ public class MoviesFragment extends Fragment {
         movieViewModel.getListMovieLiveData().observe(this, new Observer<DataWrapper<List<Movie>>>() {
             @Override
             public void onChanged(DataWrapper<List<Movie>> dataWrapper) {
-                if(!dataWrapper.hasError()) {
+                if (dataWrapper.checkError()) {
                     showContentState();
                     adapter.addAll(dataWrapper.getData());
 
@@ -112,7 +112,7 @@ public class MoviesFragment extends Fragment {
                     if (adapter.getItemCount() <= 0) {
                         showNoContentState();
                     }
-                }else{
+                } else {
                     dismissRefreshing();
                     showNoContentState();
                 }

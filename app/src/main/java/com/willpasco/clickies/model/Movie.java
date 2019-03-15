@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -14,6 +15,17 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "movie_table")
 public class Movie implements Parcelable {
 
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     @PrimaryKey
@@ -43,7 +55,6 @@ public class Movie implements Parcelable {
     @Expose
     @ColumnInfo(name = "popularity")
     private float popularity;
-
     @ColumnInfo(name = "favorite")
     private boolean favorite;
 
@@ -80,18 +91,6 @@ public class Movie implements Parcelable {
         this.popularity = parcel.readFloat();
         this.favorite = parcel.readByte() != 0;
     }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
 
     public int getId() {
         return id;
@@ -171,10 +170,11 @@ public class Movie implements Parcelable {
         parcel.writeString(overview);
         parcel.writeString(releaseDate);
         parcel.writeFloat(popularity);
-        parcel.writeByte( (byte) (favorite ? 1 : 0));
+        parcel.writeByte((byte) (favorite ? 1 : 0));
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Movie{" +
                 "id=" + id +

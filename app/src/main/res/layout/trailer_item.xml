@@ -19,7 +19,8 @@
             android:id="@+id/image_view_preview_trailer"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            tools:src="@mipmap/ic_launcher" />
+            tools:src="@mipmap/ic_launcher"
+            android:contentDescription="@string/trailer_preview_content_description" />
 
         <TextView
             android:id="@+id/text_view_trailer_title"

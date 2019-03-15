@@ -11,8 +11,6 @@ import androidx.room.RoomDatabase;
 @Database(entities = {Movie.class}, version = 1)
 public abstract class ClickiesRoomDatabase extends RoomDatabase {
 
-    public abstract MovieDao movieDao();
-
     private static volatile ClickiesRoomDatabase INSTACE;
 
     public static ClickiesRoomDatabase getDatabase(final Context context) {
@@ -28,4 +26,6 @@ public abstract class ClickiesRoomDatabase extends RoomDatabase {
         }
         return INSTACE;
     }
+
+    public abstract MovieDao movieDao();
 }

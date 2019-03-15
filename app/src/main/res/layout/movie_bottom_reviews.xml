@@ -22,7 +22,7 @@
         style="@style/TextTitle.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reviews"
+        android:text="@string/review_header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

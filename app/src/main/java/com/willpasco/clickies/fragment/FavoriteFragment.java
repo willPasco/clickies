@@ -1,10 +1,12 @@
-package com.willpasco.clickies;
+package com.willpasco.clickies.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.willpasco.clickies.R;
+import com.willpasco.clickies.adapter.MovieRecyclerAdapter;
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.viewmodel.MovieViewModel;
 
@@ -22,11 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 public class FavoriteFragment extends Fragment {
 
     private MovieRecyclerAdapter adapter;
-    private RecyclerView recyclerView;
-    private MovieViewModel movieViewModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_favorite, container, false);
@@ -35,9 +35,9 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 
-        recyclerView = view.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
 
         adapter = new MovieRecyclerAdapter();
 

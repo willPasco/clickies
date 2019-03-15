@@ -1,4 +1,4 @@
-package com.willpasco.clickies;
+package com.willpasco.clickies.adapter;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.willpasco.clickies.R;
+import com.willpasco.clickies.activity.MovieDetailsActivity;
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.util.ImageLoader;
 
@@ -15,7 +17,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.willpasco.clickies.MovieDetailsActivity.MOVIE_EXTRA_KEY;
+import static com.willpasco.clickies.activity.MovieDetailsActivity.MOVIE_EXTRA_KEY;
 
 public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdapter.MovieViewHolder> {
 
