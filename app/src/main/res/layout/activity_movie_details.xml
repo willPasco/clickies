@@ -2,17 +2,20 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
-    android:background="@drawable/home_gradient_background"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/home_gradient_background">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingLeft="@dimen/space_default"
         android:paddingRight="@dimen/space_default"
-        android:paddingBottom="@dimen/space_default">
+        android:paddingBottom="@dimen/space_default"
+        android:descendantFocusability="blocksDescendants">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -28,29 +31,29 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="@dimen/space_medium"
+            android:layout_marginRight="@dimen/space_medium"
             android:src="@drawable/ic_unfavorite"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar"
             app:layout_constraintEnd_toEndOf="@+id/toolbar"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginRight="@dimen/space_medium" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/image_view_movie_poster"
             android:layout_width="match_parent"
             android:layout_height="450dp"
             android:layout_marginTop="@dimen/space_default"
+            android:contentDescription="@string/movie_poster_content_description"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             tools:scaleType="centerCrop"
-            tools:src="@mipmap/ic_launcher"
-            android:contentDescription="@string/movie_poster_content_description" />
+            tools:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/text_view_movie_title"
             style="@style/TextTitle.Large"
             android:layout_width="match_parent"
-            android:gravity="center"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_default"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/image_view_movie_poster"
@@ -68,14 +71,14 @@
 
         <rjsv.circularview.CircleView
             android:id="@+id/circle_view_vote_rated"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_movie_title"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:arcColor="@color/vote_arc_color"
             app:arcWidth="5dp"
             app:hasIndicator="false"
             app:indicatorRadius="6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_movie_title"
             app:progressColor="@color/vote_progress_color"
             app:progressMaximumValue="10"
             app:progressMinimumValue="0"
@@ -83,20 +86,36 @@
             app:textColor="@android:color/white"
             app:textEnabled="true"
             app:textFont="fonts/Roboto-Bold.ttf"
-            app:textSize="12sp"/>
+            app:textSize="12sp" />
 
 
         <TextView
             android:id="@+id/text_view_movie_synopsis"
             style="@style/TextDescription"
             android:layout_width="match_parent"
-            android:gravity="center"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_medium"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/circle_view_vote_rated"
             tools:text="Descrição do filme" />
+
+        <include
+            android:id="@+id/movie_bottom_trailers"
+            layout="@layout/movie_bottom_trailers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="300dp"
+            android:layout_marginTop="@dimen/space_default"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_movie_synopsis"/>
+
+        <include layout="@layout/movie_bottom_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="300dp"
+            android:layout_marginTop="@dimen/space_default"
+            app:layout_constraintTop_toBottomOf="@+id/movie_bottom_trailers"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
