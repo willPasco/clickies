@@ -42,7 +42,7 @@ import static com.willpasco.clickies.HomeActivity.TOP_RATED_SEARCH_TYPE;
  */
 public class MoviesFragment extends Fragment {
 
-    private static final int CONNECTION_CHECK_REQUEST_CODE = 4521;
+    public static final int CONNECTION_CHECK_REQUEST_CODE = 4521;
 
     private MovieRecyclerAdapter adapter;
     private RecyclerView recyclerView;

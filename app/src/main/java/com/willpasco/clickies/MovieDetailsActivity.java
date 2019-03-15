@@ -1,9 +1,13 @@
 package com.willpasco.clickies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.willpasco.clickies.model.Movie;
 import com.willpasco.clickies.model.Review;
 import com.willpasco.clickies.model.Trailer;
@@ -30,12 +35,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import rjsv.circularview.CircleView;
 
 import static com.willpasco.clickies.MovieRecyclerAdapter.BASE_IMAGE_PATH;
+import static com.willpasco.clickies.MoviesFragment.CONNECTION_CHECK_REQUEST_CODE;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
     public static final String MOVIE_EXTRA_KEY = "movie";
     private boolean isFavorite = false;
 
+    private View rootView;
     private TextView movieTitle;
     private TextView movieSynopsis;
     private ImageView movieImagePoster;
@@ -63,6 +70,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 
         onBindView();
+
+        if (noInternetConnection()) {
+            showNoNetworkState();
+        }
 
         toolbar.setTitle(getString(R.string.toolbar_details_title));
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
@@ -110,7 +121,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (!dataWrapper.hasError()) {
                     reviewAdapter.addAll(dataWrapper.getData());
                     showReviewContentState();
-                    if(trailerAdapter.getItemCount() <=0 ){
+                    if (trailerAdapter.getItemCount() <= 0) {
                         showReviewErrorState();
                     }
                 } else {
@@ -137,7 +148,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (!dataWrapper.hasError()) {
                     trailerAdapter.addAll(dataWrapper.getData());
                     showTrailerContentState();
-                    if(trailerAdapter.getItemCount() <=0 ){
+                    if (trailerAdapter.getItemCount() <= 0) {
                         showTrailerErrorState();
                     }
                 } else {
@@ -177,12 +188,34 @@ public class MovieDetailsActivity extends AppCompatActivity {
         trailerErrorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTrailerLoadingState();
-                viewModel.loadTrailers(id);
+                if (noInternetConnection()) {
+                    showNoNetworkState();
+                } else {
+                    showTrailerLoadingState();
+                    viewModel.loadTrailers(id);
+                }
             }
         });
     }
 
+    private void onBindView() {
+        rootView = findViewById(R.id.root_layout);
+        movieTitle = findViewById(R.id.text_view_movie_title);
+        movieSynopsis = findViewById(R.id.text_view_movie_synopsis);
+        movieImagePoster = findViewById(R.id.image_view_movie_poster);
+        movieDate = findViewById(R.id.text_view_movie_date);
+        toolbar = findViewById(R.id.toolbar);
+        voteRated = findViewById(R.id.circle_view_vote_rated);
+        favoriteIcon = findViewById(R.id.image_view_favorite);
+
+        trailerRecyclerView = findViewById(R.id.recycler_view_trailer);
+        trailerProgressBar = findViewById(R.id.progress_bar_trailer);
+        trailerErrorState = findViewById(R.id.include_trailer_error_state);
+
+        reviewRecyclerView = findViewById(R.id.recycler_view_review);
+        reviewProgressBar = findViewById(R.id.progress_bar_review);
+        reviewErrorState = findViewById(R.id.include_review_error_state);
+    }
 
     private void showTrailerLoadingState() {
         trailerProgressBar.setVisibility(View.VISIBLE);
@@ -196,19 +229,23 @@ public class MovieDetailsActivity extends AppCompatActivity {
         trailerErrorState.setVisibility(View.VISIBLE);
     }
 
-
-    private void showTrailerContentState(){
+    private void showTrailerContentState() {
         trailerProgressBar.setVisibility(View.GONE);
         trailerRecyclerView.setVisibility(View.VISIBLE);
         trailerErrorState.setVisibility(View.GONE);
     }
+
     private void configReviewErrorButton(final int id) {
         Button reviewErrorButton = reviewErrorState.findViewById(R.id.button_retry);
         reviewErrorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showReviewLoadingState();;
-                viewModel.loadReviews(id);
+                if (noInternetConnection()) {
+                    showNoNetworkState();
+                } else {
+                    showReviewLoadingState();
+                    viewModel.loadReviews(id);
+                }
             }
         });
     }
@@ -225,12 +262,30 @@ public class MovieDetailsActivity extends AppCompatActivity {
         reviewErrorState.setVisibility(View.VISIBLE);
     }
 
-
-    private void showReviewContentState(){
+    private void showReviewContentState() {
         reviewProgressBar.setVisibility(View.GONE);
         reviewRecyclerView.setVisibility(View.VISIBLE);
         reviewErrorState.setVisibility(View.GONE);
     }
+
+    private void showNoNetworkState() {
+        Snackbar.make(rootView, R.string.no_network, Snackbar.LENGTH_LONG)
+                .setAction(R.string.snack_bar_settings_action, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                        startActivityForResult(intent, CONNECTION_CHECK_REQUEST_CODE);
+                    }
+                }).setActionTextColor(getResources().getColor(R.color.snack_action_color))
+                .show();
+    }
+
+    private boolean noInternetConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        return activeNetwork == null || !activeNetwork.isConnectedOrConnecting();
+    }
+
     private String formatDate(String date) {
         String[] strings = date.split("-");
         String day = strings[2];
@@ -246,22 +301,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         return true;
     }
 
-    private void onBindView() {
-        movieTitle = findViewById(R.id.text_view_movie_title);
-        movieSynopsis = findViewById(R.id.text_view_movie_synopsis);
-        movieImagePoster = findViewById(R.id.image_view_movie_poster);
-        movieDate = findViewById(R.id.text_view_movie_date);
-        toolbar = findViewById(R.id.toolbar);
-        voteRated = findViewById(R.id.circle_view_vote_rated);
-        favoriteIcon = findViewById(R.id.image_view_favorite);
-
-        trailerRecyclerView = findViewById(R.id.recycler_view_trailer);
-        trailerProgressBar = findViewById(R.id.progress_bar_trailer);
-        trailerErrorState = findViewById(R.id.include_trailer_error_state);
-
-        reviewRecyclerView = findViewById(R.id.recycler_view_review);
-        reviewProgressBar = findViewById(R.id.progress_bar_review);
-        reviewErrorState = findViewById(R.id.include_review_error_state);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CONNECTION_CHECK_REQUEST_CODE) {
+            if (noInternetConnection()) {
+                showNoNetworkState();
+            }
+        }
     }
 
     private class CheckFavoriteAsyncTask extends AsyncTask<Integer, Void, Boolean> {
