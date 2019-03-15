@@ -11,5 +11,5 @@
     <string name="internet_connected">Internet conectada com sucesso.</string>
     <string name="details_bottom_no_content_state_description">Não conseguimos recuperar nenhum conteúdo!</string>
     <string name="more_text_option">Mais</string>
-    <string name="less_text_option">…Menos</string>
+    <string name="less_text_option">&#160; Menos</string>
 </resources>
