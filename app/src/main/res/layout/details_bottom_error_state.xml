@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/TextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/details_bottom_no_content_state_description"
+        tools:textColor="@android:color/black" />
+
+    <Button
+        android:id="@+id/button_retry"
+        android:padding="@dimen/space_medium"
+        android:layout_gravity="center"
+        android:text="@string/button_retry"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_width="wrap_content"
+        android:textColor="@android:color/white"
+        android:background="@color/colorAccent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

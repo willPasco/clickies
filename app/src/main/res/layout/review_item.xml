@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@drawable/home_gradient_background"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text_view_review_author"
+        tools:text="Autor"
+        android:layout_marginTop="@dimen/space_default"
+        style="@style/TextTitle.Bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_view_review_description"
+        tools:text="Descrição"
+        android:layout_marginTop="@dimen/space_default"
+        style="@style/TextDescription.Small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/view_trailer_separator"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="@dimen/space_medium"
+        android:alpha="0.4"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/layout_content" />
+
+</LinearLayout>

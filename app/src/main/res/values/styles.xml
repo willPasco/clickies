@@ -30,6 +30,11 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="TextTitle.Bold" parent="TextTitle">
+        <item name="android:alpha">1</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="TextTitle.Large" parent="TextTitle">
         <item name="android:textSize">20sp</item>
         <item name="android:alpha">1</item>
