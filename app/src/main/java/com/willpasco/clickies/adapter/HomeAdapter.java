@@ -10,6 +10,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 public class HomeAdapter extends FragmentPagerAdapter {
 
+    public static final int MOVIE_LIST_POSITION = 0;
+    public static final int FAVORITE_LIST_POSITION = 1;
+
     public HomeAdapter(@NonNull FragmentManager fm) {
         super(fm);
     }
@@ -23,9 +26,9 @@ public class HomeAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0:
+            case MOVIE_LIST_POSITION:
                 return new MoviesFragment();
-            case 1:
+            case FAVORITE_LIST_POSITION:
                 return new FavoriteFragment();
             default:
                 return null;

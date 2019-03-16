@@ -15,4 +15,6 @@
     <string name="button_retry">Tentar novamente</string>
     <string name="review_header">Reviews</string>
     <string name="trailer_header">Trailers</string>
+    <string name="favorite_toolbar_title">Favoritos</string>
+    <string name="menu_movie">Movie</string>
 </resources>
